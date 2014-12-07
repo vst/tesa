@@ -174,3 +174,14 @@ class ProductVariantModel(osv.osv):
 
 
 ProductVariantModel()
+
+
+class SupplierInfoModel(osv.osv):
+    _inherit = "product.supplierinfo"
+
+    _columns = {
+        "rep_price": fields.float("Rep Price"),
+    }
+
+
+SupplierInfoModel()

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
   <data>
-
     <!-- SUB PART LINE -->
     <record id="product_subpartline_view" model="ir.ui.view">
       <field name="name">product.subpartline.tree.view</field>
@@ -97,6 +96,32 @@
             <attribute name="string">Costing and Suppliers</attribute>
           </page>
         </data>
+      </field>
+    </record>
+
+    <!-- VIEW: SUPPLIER INFO (TREE) -->
+    <record id="product_supplierinfo_tree_view_enhanced" model="ir.ui.view">
+      <field name="name">product.supplierinfo.tree.view</field>
+      <field name="model">product.supplierinfo</field>
+      <field name="inherit_id" ref="product.product_supplierinfo_tree_view" />
+      <field name="arch" type="xml">
+        <tree string="Supplier Information">
+          <!-- Add Rep Price -->
+          <field name="rep_price" />
+        </tree>
+      </field>
+    </record>
+
+    <!-- VIEW: SUPPLIER INFO (FORM) -->
+    <record id="product_supplierinfo_form_view_enhanced" model="ir.ui.view">
+      <field name="name">product.supplierinfo.form.view</field>
+      <field name="model">product.supplierinfo</field>
+      <field name="inherit_id" ref="product.product_supplierinfo_form_view" />
+      <field name="arch" type="xml">
+        <field name="product_uom" position="after">
+          <!-- Add Rep Price -->
+          <field name="rep_price" />
+        </field>
       </field>
     </record>
 
