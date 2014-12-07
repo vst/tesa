@@ -7,5 +7,8 @@
               action="open_module_form_brand"
               parent="stock.menu_stock_product"
               sequence="2" />
+
+    <!-- MENU ITEMS: FLOWCHART -->
+    <menuitem action="flowchart" id="menu_client_flowchart"/>
   </data>
 </openerp>
