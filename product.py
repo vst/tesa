@@ -71,6 +71,16 @@ class ProductTemplateModel(osv.osv):
         ## Done, return with a smiley face:
         return result
 
+    def get_stock_locations(self, cr, uid, ids, field_names=None, arg=None, context=None):
+        result = {}
+        if not ids: return result
+        context["only_with_stock"] = False
+        for id in ids:
+            context["product_id"] = id
+            location_obj = self.pool.get("stock.location")
+            result[id] = location_obj.search(cr, uid, [("usage", "=", "internal")], context=context)
+        return result
+
     _columns = {
         ## Core price data:
         "special_sales_price": fields.float("Special Sales Price"),
@@ -91,7 +101,7 @@ class ProductTemplateModel(osv.osv):
         "application_code": fields.char("Application Code", size=256),
 
         ## Relations:
-        #"brand": fields.many2one("product.brand", "Brand", select=True),
+        "brand": fields.many2one("product.brand", "Brand", select=True),
         "oem": fields.many2one("product.template", "OEM", select=True),
         "reverse_oem_ids": fields.one2many("product.template", "oem", "OEMs", readonly=True),
         "subparts": fields.one2many("product.subpartline", "product_id", "Subparts"),
@@ -103,7 +113,7 @@ class ProductTemplateModel(osv.osv):
 
         ## Computed relational data:
         "related_oems": fields.function(get_related_oems, type="one2many", relation="product.template", string="Related OEMs"),
-        #"stock_locations": fields.function(get_stock_locations, type="one2many", relation="stock.location", string="Stock by Location"),
+        "stock_locations": fields.function(get_stock_locations, type="one2many", relation="stock.location", string="Stock by Location"),
 
         ## Computed stock data:
         #"stock_A_real": fields.function(get_stock_A_real, type="double", string="Stock A (Real)"),

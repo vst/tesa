@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+    <!-- VIEW: CONTACT FORM -->
+    <record id="view_partner_form_extended" model="ir.ui.view">
+      <field name="name">res.partner.form</field>
+      <field name="model">res.partner</field>
+      <field name="type">tree</field>
+      <field name="inherit_id" ref="base.view_partner_form" />
+      <field name="arch" type="xml">
+        <data>
+          <field name="ref" position="replace" />
+          <field name="parent_id" position="before">
+            <div class="oe_edit_only">
+              <label for="ref"/>
+            </div>
+            <h3>
+              <field name="ref" placeholder="Partner Code" />
+            </h3>
+          </field>
+        </data>
+      </field>
+    </record>
+
+    <!-- DEFAULT VIEW: TREE -->
+    <record id="base.action_partner_form" model="ir.actions.act_window">
+      <field name="view_mode">tree,form,kanban</field>
+    </record>
+
+    <record id="base.action_partner_supplier_form" model="ir.actions.act_window">
+      <field name="view_mode">tree,form,kanban</field>
+    </record>
+
+    <record id="base.action_partner_customer_form" model="ir.actions.act_window">
+      <field name="view_mode">tree,form,kanban</field>
+    </record>
+
+    <record id="base.action_partner_form_view1" model="ir.actions.act_window.view">
+      <field name="sequence" eval="3"/>
+    </record>
+
+    <record id="base.action_partner_form_view2" model="ir.actions.act_window.view">
+      <field name="sequence" eval="2"/>
+    </record>
+
+    <record id="base.action_partner_tree_view1" model="ir.actions.act_window.view">
+      <field name="sequence" eval="1"/>
+    </record>
+
+  </data>
+</openerp>

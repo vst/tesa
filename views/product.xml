@@ -16,10 +16,10 @@
     </record>
 
     <!-- PRODUCT FORM -->
-    <record model="ir.ui.view" id="product_template_form">
-      <field name="name">product.template.product.form</field>
-      <field name="model">product.template</field>
-      <field name="inherit_id" ref="product.product_template_only_form_view" />
+    <record model="ir.ui.view" id="product_form">
+      <field name="name">product.product.form</field>
+      <field name="model">product.product</field>
+      <field name="inherit_id" ref="product.product_normal_form_view" />
       <field name="arch" type="xml">
         <data>
           <!-- Remove the default code from its current position: -->
@@ -27,8 +27,8 @@
 
           <!-- Add the default code right under the name: -->
           <label for="name" position="before">
-              <label for="default_code" string="Product Number"/>
-              <h1><field name="default_code" class="oe_inline" /></h1>
+            <label for="default_code" string="Product Number"/>
+            <h1><field name="default_code" class="oe_inline" /></h1>
           </label>
 
           <!-- Show the label for the name: -->
@@ -37,16 +37,16 @@
           </label>
 
           <!-- Add additional sales price types: -->
-          <field name="list_price" position="after">
-              <field name="minimum_cash_sales_price" string="Cash Sales Price" />
-              <field name="export_sales_price" />
-              <field name="minimum_sales_price" />
-              <field name="special_sales_price" string="SNP" />
+          <field name="lst_price" position="after">
+            <field name="minimum_cash_sales_price" string="Cash Sales Price" />
+            <field name="export_sales_price" />
+            <field name="minimum_sales_price" />
+            <field name="special_sales_price" string="SNP" />
           </field>
 
           <!-- Add additional information right after EAN13 Barcode on the home tab: -->
           <field name="ean13" position="after">
-            <!-- TODO:  <field name="brand" /> -->
+            <field name="brand" />
             <field name="oem" />
             <field name="manufactured_in" />
             <field name="application_code" />
@@ -85,7 +85,6 @@
             <field name="core_charges" />
           </label>
 
-
           <!-- Add Old System Data: -->
           <page string="Accounting" position="after">
             <page string="Old System Data">
@@ -97,12 +96,25 @@
           <page string="Procurements" position="attributes">
             <attribute name="string">Costing and Suppliers</attribute>
           </page>
-
-          <!-- Hide Variants: -->
-          <page string="Variants" position="replace" />
-
         </data>
       </field>
+    </record>
+
+    <!-- PRODUCT LIST VIEW FIXES -->
+    <record id="product.product_template_action" model="ir.actions.act_window">
+      <field name="view_mode">tree,form,kanban</field>
+    </record>
+
+    <record id="product.product_normal_action" model="ir.actions.act_window">
+      <field name="view_mode">tree,form,kanban</field>
+    </record>
+
+    <record id="product.product_normal_action_sell" model="ir.actions.act_window">
+      <field name="view_mode">tree,form,kanban</field>
+    </record>
+
+    <record id="purchase.product_normal_action_puchased" model="ir.actions.act_window">
+      <field name="view_mode">tree,form,kanban</field>
     </record>
   </data>
 </openerp>

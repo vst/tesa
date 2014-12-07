@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+    <!-- MENU ITEMS: BRAND -->
+    <menuitem id="menu_product_brand"
+              name="Product Brands"
+              action="open_module_form_brand"
+              parent="stock.menu_stock_product"
+              sequence="2" />
+  </data>
+</openerp>

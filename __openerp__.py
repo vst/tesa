@@ -1,10 +1,10 @@
 {
-    "name": "TESA",
+    "name": "tesa",
     "version": "0.0.1",
     "author": "Telosoft",
     "category": "Tools",
     "website": "http://www.telosoft.com",
-    "description": """Provides an ERP Implementation and Customization Addon for ESA""",
+    "description": """Provides an ERP Implementation and Customization Addon""",
     "depends": [
         "base",
         "web",
@@ -23,7 +23,10 @@
     "update_xml": [
     ],
     "data": [
-        "views/product.xml"
+        "views/product.xml",
+        "views/brand.xml",
+        "views/partner.xml",
+        "views/_menu.xml",
     ],
     "qweb" : [
     ],
