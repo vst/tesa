@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+    <!-- VIEW: STOCK PICKING OUT -->
+    <record id="view_picking_form_t6tesa" model="ir.ui.view">
+      <field name="name">stock.picking.form.inherit</field>
+      <field name="model">stock.picking</field>
+      <field name="inherit_id" ref="stock.view_picking_form"/>
+      <field name="arch" type="xml">
+        <!-- Add sizing -->
+        <field name="date_done" position="after">
+          <field name="sizing" />
+        </field>
+      </field>
+    </record>
+  </data>
+</openerp>
