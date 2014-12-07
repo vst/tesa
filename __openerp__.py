@@ -27,6 +27,7 @@
         "views/brand.xml",
         "views/partner.xml",
         "views/stock.xml",
+        "views/sale.xml",
         "views/_menu.xml",
     ],
     "qweb" : [

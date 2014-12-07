@@ -2,7 +2,7 @@
 <openerp>
   <data>
     <!-- VIEW: STOCK PICKING OUT -->
-    <record id="view_picking_form_t6tesa" model="ir.ui.view">
+    <record id="view_picking_form_tesa" model="ir.ui.view">
       <field name="name">stock.picking.form.inherit</field>
       <field name="model">stock.picking</field>
       <field name="inherit_id" ref="stock.view_picking_form"/>
