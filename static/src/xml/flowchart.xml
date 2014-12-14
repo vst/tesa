@@ -1,0 +1,26 @@
+<templates>
+  <div t-name="flowchart.action">
+    <div style="text-align:center; margin-top:30px;">
+      <map name="flowchart">
+        <area target="_blank" href="/?db=odoo1#menu_id=578" shape="rect" coords="12,12,120,64" />
+        <area target="_blank" href="/?db=odoo1#menu_id=586" shape="rect" coords="156,12,262,64" />
+        <area target="_blank" href="/?db=odoo1#menu_id=587" shape="rect" coords="300,12,405,64" />
+        <area target="_blank" href="/?db=odoo1#menu_id=484" shape="rect" coords="443,12,549,64" />
+        <area target="_blank" href="/?db=odoo1#menu_id=545" shape="rect" coords="300,103,406,156" />
+        <area target="_blank" href="/?db=odoo1#menu_id=545" shape="rect" coords="444,105,548,153" />
+        <area target="_blank" href="/?db=odoo1#menu_id=486" shape="rect" coords="586,104,693,154" />
+        <area target="_blank" href="/?db=odoo1#menu_id=527" shape="rect" coords="50,210,155,261" />
+        <area target="_blank" href="/?db=odoo1#menu_id=545" shape="rect" coords="193,211,297,262" />
+        <area target="_blank" href="/?db=odoo1#menu_id=527" shape="rect" coords="373,211,477,261" />
+        <area target="_blank" href="/?db=odoo1#menu_id=545" shape="rect" coords="301,319,405,369" />
+        <area target="_blank" href="/?db=odoo1#menu_id=545" shape="rect" coords="444,319,549,366" />
+        <area target="_blank" href="/?db=odoo1#menu_id=485" shape="rect" coords="589,320,693,370" />
+        <area target="_blank" href="/?db=odoo1#menu_id=332"  shape="rect" coords="12,406,120,464" />
+        <area target="_blank" href="/?db=odoo1#menu_id=518" shape="rect" coords="156,406,262,464" />
+        <area target="_blank" href="/?db=odoo1#menu_id=517" shape="rect" coords="300,406,405,464" />
+        <area target="_blank" href="/?db=odoo1#menu_id=483" shape="rect" coords="443,406,549,464" />
+      </map>
+      <img id="flowchart" usemap="flowchart" src="/tesa/static/src/img/flowchart.png" height="472" />
+    </div>
+  </div>
+</templates>

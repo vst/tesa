@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+    <!-- VIEW: BRAND -->
+    <record id="view_brand_form" model="ir.ui.view">
+      <field name="name">product.brand.form</field>
+      <field name="model">product.brand</field>
+      <field name="arch" type="xml">
+        <form string="brand" version="7.0">
+          <sheet>
+            <group>
+              <field name="name"/>
+              <field name="manufactured"/>
+              <field name="description"/>
+            </group>
+          </sheet>
+        </form>
+      </field>
+    </record>
+
+    <!-- ACTION: BRAND -->
+    <record id="open_module_form_brand" model="ir.actions.act_window">
+      <field name="name">Brands</field>
+      <field name="res_model">product.brand</field>
+      <field name="view_type">form</field>
+      <field name="help" type="html">
+        <p class="oe_view_nocontent_create">
+          Click to create a brand.
+        </p>
+      </field>
+    </record>
+  </data>
+</openerp>

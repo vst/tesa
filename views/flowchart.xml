@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+    <record model="ir.actions.client" id="flowchart">
+      <field name="name">Flowchart</field>
+      <field name="tag">flowchart.action</field>
+    </record>
+
+    <template id="assets_backend" name="tesa assets" inherit_id="web.assets_backend">
+      <xpath expr="." position="inside">
+        <link rel="stylesheet" href="/tesa/static/src/css/tesa.css"/>
+        <script type="text/javascript" src="/tesa/static/src/js/tesa.js"></script>
+      </xpath>
+    </template>
+  </data>
+</openerp>

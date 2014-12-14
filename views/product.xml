@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+    <!-- SUB PART LINE -->
+    <record id="product_subpartline_view" model="ir.ui.view">
+      <field name="name">product.subpartline.tree.view</field>
+      <field name="model">product.subpartline</field>
+      <field name="arch" type="xml">
+        <tree string="Subpart Information">
+          <field name="subpart_id" />
+          <field name="unit_id" />
+          <field name="quantity" />
+        </tree>
+      </field>
+    </record>
+
+    <!-- PRODUCT FORM -->
+    <record model="ir.ui.view" id="product_form">
+      <field name="name">product.product.form</field>
+      <field name="model">product.product</field>
+      <field name="inherit_id" ref="product.product_normal_form_view" />
+      <field name="arch" type="xml">
+        <data>
+          <!-- Remove the default code from its current position: -->
+          <field name="default_code" position="replace" />
+
+          <!-- Add the default code right under the name: -->
+          <label for="name" position="before">
+            <label for="default_code" string="Product Number"/>
+            <h1><field name="default_code" class="oe_inline" /></h1>
+          </label>
+
+          <!-- Show the label for the name: -->
+          <label for="name" position="replace">
+            <label for="name" string="Product Name" />
+          </label>
+
+          <!-- Add additional sales price types: -->
+          <field name="lst_price" position="after">
+            <field name="minimum_cash_sales_price" string="Cash Sales Price" />
+            <field name="export_sales_price" />
+            <field name="minimum_sales_price" />
+            <field name="special_sales_price" string="SNP" />
+          </field>
+
+          <!-- Add additional information right after EAN13 Barcode on the home tab: -->
+          <field name="ean13" position="after">
+            <field name="brand" />
+            <field name="oem" />
+            <field name="manufactured_in" />
+            <field name="application_code" />
+            <field name="weight_migrate" />
+          </field>
+
+          <!-- Change rack/row/case to Warehouse names: -->
+          <field name="loc_rack" position="attributes">
+            <attribute name="string">Serangoon</attribute>
+          </field>
+
+          <field name="loc_row" position="attributes">
+            <attribute name="string">Kaki Bukit</attribute>
+          </field>
+
+          <field name="loc_case" position="attributes">
+            <attribute name="string">Tuas</attribute>
+          </field>
+
+          <!-- Add related OEMs: -->
+          <field name="description" position="before">
+            <separator string="Related OEMs" />
+            <field name="related_oems" />
+            <separator string="Subparts" />
+            <field name="subparts" />
+          </field>
+
+          <!-- Add cost related stuff: -->
+          <label for="standard_price" position="before">
+            <field name="manual_cost_price" />
+            <field name="previous_local_deal_cost_price" />
+            <field name="current_local_deal_cost_price" />
+            <field name="etk_cost_price" />
+            <field name="local_deal_discount_rate" />
+            <field name="etk_discount_rate" />
+            <field name="core_charges" />
+          </label>
+
+          <!-- Add Old System Data: -->
+          <page string="Accounting" position="after">
+            <page string="Old System Data">
+              <field name="old_system_data" />
+            </page>
+          </page>
+
+          <!-- Change Procurements' name: -->
+          <page string="Procurements" position="attributes">
+            <attribute name="string">Costing and Suppliers</attribute>
+          </page>
+        </data>
+      </field>
+    </record>
+
+    <!-- VIEW: SUPPLIER INFO (TREE) -->
+    <record id="product_supplierinfo_tree_view_enhanced" model="ir.ui.view">
+      <field name="name">product.supplierinfo.tree.view</field>
+      <field name="model">product.supplierinfo</field>
+      <field name="inherit_id" ref="product.product_supplierinfo_tree_view" />
+      <field name="arch" type="xml">
+        <tree string="Supplier Information">
+          <!-- Add Rep Price -->
+          <field name="rep_price" />
+        </tree>
+      </field>
+    </record>
+
+    <!-- VIEW: SUPPLIER INFO (FORM) -->
+    <record id="product_supplierinfo_form_view_enhanced" model="ir.ui.view">
+      <field name="name">product.supplierinfo.form.view</field>
+      <field name="model">product.supplierinfo</field>
+      <field name="inherit_id" ref="product.product_supplierinfo_form_view" />
+      <field name="arch" type="xml">
+        <field name="product_uom" position="after">
+          <!-- Add Rep Price -->
+          <field name="rep_price" />
+        </field>
+      </field>
+    </record>
+
+    <!-- PRODUCT LIST VIEW FIXES -->
+    <record id="product.product_template_action" model="ir.actions.act_window">
+      <field name="view_mode">tree,form,kanban</field>
+    </record>
+
+    <record id="product.product_normal_action" model="ir.actions.act_window">
+      <field name="view_mode">tree,form,kanban</field>
+    </record>
+
+    <record id="product.product_normal_action_sell" model="ir.actions.act_window">
+      <field name="view_mode">tree,form,kanban</field>
+    </record>
+
+    <record id="purchase.product_normal_action_puchased" model="ir.actions.act_window">
+      <field name="view_mode">tree,form,kanban</field>
+    </record>
+  </data>
+</openerp>
