@@ -1,3 +1,7 @@
 .openerp .oe_form_sheet_width {
     max-width: 90% !important;
 }
+
+td.announcement_bar {
+    display: none;
+}
