@@ -1,6 +1,6 @@
 {
     "name": "tesa",
-    "version": "0.0.2dev",
+    "version": "0.0.2",
     "author": "Telosoft",
     "category": "Tools",
     "website": "http://www.telosoft.com",
