@@ -8,7 +8,28 @@
               parent="stock.menu_stock_product"
               sequence="2" />
 
+
     <!-- MENU ITEMS: FLOWCHART -->
     <menuitem action="flowchart" id="menu_client_flowchart"/>
+
+
+    <!-- BEGIN MENUITEMS: PRODUCT/PRODUCT VARIANTS -->
+    <menuitem id="base.menu_product" name="Products" parent="base.menu_base_partner" /> <!-- Sale/Product Variants .. Sale/Products -->
+    <menuitem id="product.menu_products" name="Products List" parent="base.menu_product" /> <!-- Rename Sale/Product Variants .. Sale/Products List -->
+    <delete id="product.menu_product_template_action" model="ir.ui.menu"/> <!-- Remove product templates from Sale/Products -->
+
+    <menuitem id="tesa.menu_purchases_products_products_list" name="Products List" action="product.product_normal_action_sell" parent="purchase.menu_procurement_management_product" sequence="5"/> <!-- Add Products List to Purchase/Products -->
+    <delete id="purchase.menu_procurement_partner_contact_form" model="ir.ui.menu" /> <!-- Remove product templates from Purchase/Products -->
+
+    <menuitem id="tesa.menu_warehouse_products_products_list" name="Products List" action="product.product_normal_action_sell" parent="stock.menu_stock_product" sequence="0"/> <!-- Add Products List to Warehouse/Products -->
+    <menuitem id="stock.menu_product_by_category_stock_form" name="Products by Category" parent="stock.menu_stock_product" sequence="5"/> <!-- Change the sequencet of Warehouse/Products/Products by Category -->
+    <delete id="stock.menu_stock_products_menu" model="ir.ui.menu" /> <!-- Remove product templates from Warehouse/Products -->
+    <!-- END MENUITEMS: PRODUCT/PRODUCT VARIANTS -->
+
+
+    <!-- MENUITEM: CUSTOMERS GOES BOTTOM -->
+    <menuitem id="base.menu_partner_form" name="Customers" parent="base.menu_sales" action="base.action_partner_form" sequence="100"/>
+
+
   </data>
 </openerp>
