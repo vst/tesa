@@ -15,6 +15,7 @@
         "contacts",
         "account_asset",
         "account_cancel",
+        "stock_reserve_sale",
     ],
     "init_xml": [
     ],
