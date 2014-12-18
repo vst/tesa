@@ -9,11 +9,17 @@ _logger = logging.getLogger(__name__)
 
 class BrandModel(osv.osv):
     _name = "product.brand"
+
     _columns = {
-        "manufactured": fields.char("Manufactured In", size=128),
+        "code": fields.char("Code", size=128),
         "name": fields.char("Name", size=128, required=True),
+        "manufactured": fields.char("Manufactured In", size=128),
         "description": fields.text("Description"),
     }
+
+    _sql_constraints = [
+        ("product_brand_code_unique", "unique(code)", "Brand code must be unique"),
+    ]
 
     def name_get(self, cr, uid, ids, context=None):
         ## Check the argument type:
