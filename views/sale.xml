@@ -32,6 +32,14 @@
       <field name="inherit_id" ref="sale.view_order_form"/>
       <field name="arch" type="xml">
         <data>
+          <!-- Add product buttons -->
+          <xpath expr="//field[@name='product_id']" position="before">
+            <button name="browse_product_id"  icon="STOCK_FIND" type="object"/>
+          </xpath>
+          <xpath expr="//tree/field[@name='product_id']" position="before">
+            <button name="browse_product_id"  icon="STOCK_FIND" type="object"/>
+          </xpath>
+
           <!-- Add salesman, delivery date and remarks from the old system -->
           <xpath expr="/form/sheet/notebook/page[@string='Other Information']" position="after">
             <page string="Extra Information">

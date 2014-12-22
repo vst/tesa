@@ -21,10 +21,32 @@ class SaleOrderLineModel(osv.osv):
     def get_order_date(self, cr, uid, ids, field_names=None, arg=None, context=None):
         return dict([(i, self.get_order_date_internal(cr, uid, i, field_names=None, arg=None, context=None)) for i in ids])
 
+    def browse_product_id(self, cr, uid, ids, context):
+        ## Check the argument type:
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+
+        ## Get the object:
+        obj = self.browse(cr, uid, ids, context=context)[0]
+
+        ## Return the actionable:
+        return {
+            "view_type": "form",
+            "view_mode": "form",
+            "res_model": "product.product",
+            "res_id": obj.product_id.id,
+            "type": "ir.actions.act_window",
+            "target": "current",
+            "context": context,
+            "nodestroy": True
+        }
+
     _columns = {
         "product_oem": fields.many2one("product.product", "OEM", select=True),
         "order_date": fields.function(get_order_date, type="text", string="Order Date"),
     }
+
+
 
 
 SaleOrderLineModel()

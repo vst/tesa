@@ -27,6 +27,7 @@
         "views/partner.xml",
         "views/stock.xml",
         "views/sale.xml",
+        "views/purchase.xml",
         "views/flowchart.xml",
         "views/_menu.xml",
     ],
