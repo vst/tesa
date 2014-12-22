@@ -7,7 +7,7 @@ import logging
 _logger = logging.getLogger(__name__)
 
 
-class SalesOrderLineModel(osv.osv):
+class SaleOrderLineModel(osv.osv):
     _inherit = "sale.order.line"
 
     def get_order_date_internal(self, cr, uid, id, field_names=None, arg=None, context=None):
@@ -27,4 +27,17 @@ class SalesOrderLineModel(osv.osv):
     }
 
 
-SalesOrderLineModel()
+SaleOrderLineModel()
+
+
+class SaleOrderModel(osv.osv):
+    _inherit = "sale.order"
+
+    _columns = {
+        "xremarks": fields.text("Remarks"),
+        "xsalesman": fields.char("Salesman", size=128),
+        "xdeliverydate": fields.char("Delivery Date", size=256),
+    }
+
+
+SaleOrderModel()
