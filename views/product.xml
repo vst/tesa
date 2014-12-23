@@ -35,6 +35,14 @@
             <label for="name" string="Product Name" />
           </label>
 
+          <!-- Need name to be editable -->
+          <field name="name" position="replace">
+            <field name="name" />
+          </field>
+
+          <!-- Remote template link-->
+          <field name="product_tmpl_id" position="replace" />
+
           <!-- Add additional sales price types: -->
           <field name="lst_price" position="after">
             <field name="minimum_cash_sales_price" string="Cash Sales Price" />
