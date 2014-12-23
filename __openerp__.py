@@ -1,6 +1,6 @@
 {
     "name": "tesa",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "author": "Telosoft",
     "category": "Tools",
     "website": "http://www.telosoft.com",
@@ -15,6 +15,7 @@
         "contacts",
         "account_asset",
         "account_cancel",
+        "stock_reserve_sale",
     ],
     "init_xml": [
     ],
@@ -26,6 +27,7 @@
         "views/partner.xml",
         "views/stock.xml",
         "views/sale.xml",
+        "views/purchase.xml",
         "views/flowchart.xml",
         "views/_menu.xml",
     ],

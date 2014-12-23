@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+    <!-- VIEW: PURCHASE ORDER FORM -->
+    <record id="view_res_purchase_line_form1" model="ir.ui.view">
+      <field name="name">purchase.order.line.form.inherit</field>
+      <field name="model">purchase.order</field>
+      <field name="type">form</field>
+      <field name="priority" eval="8"/>
+      <field name="inherit_id" ref="purchase.purchase_order_form"/>
+      <field name="arch" type="xml">
+        <data>
+          <!-- Add product buttons -->
+          <field name="product_id" position="before">
+            <button name="browse_product_id"  icon="STOCK_FIND" type="object"/>
+          </field>
+        </data>
+      </field>
+    </record>
+  </data>
+</openerp>

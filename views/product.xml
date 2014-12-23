@@ -35,6 +35,14 @@
             <label for="name" string="Product Name" />
           </label>
 
+          <!-- Need name to be editable -->
+          <field name="name" position="replace">
+            <field name="name" />
+          </field>
+
+          <!-- Remote template link-->
+          <field name="product_tmpl_id" position="replace" />
+
           <!-- Add additional sales price types: -->
           <field name="lst_price" position="after">
             <field name="minimum_cash_sales_price" string="Cash Sales Price" />
@@ -141,5 +149,46 @@
     <record id="purchase.product_normal_action_puchased" model="ir.actions.act_window">
       <field name="view_mode">tree,form,kanban</field>
     </record>
+
+    <!-- PRODUCT LIST VIEW COLUMNS -->
+    <record model="ir.ui.view" id="product_product_tree_view_inherited">
+      <field name="name">product.product_product_tree_view.inherited</field>
+      <field name="model">product.product</field>
+      <field name="inherit_id" ref="product.product_product_tree_view"/>
+      <field name="arch" type="xml">
+
+        <!-- Remove attrbiutes -->
+        <field name="attribute_value_ids" position="replace" />
+
+        <!-- Add brand -->
+        <field name="name" position="after">
+          <field name="brand" />
+        </field>
+
+        <!-- Add additional prices -->
+        <field name="lst_price" position="before">
+          <field name="minimum_cash_sales_price" />
+          <field name="export_sales_price" />
+          <field name="minimum_sales_price" />
+        </field>
+
+        <!-- Remove unit of measure -->
+        <field name="uom_id" position="replace" />
+
+        <!-- Remove barcode -->
+        <field name="ean13" position="replace" />
+
+        <!-- TODO: Enable location wise stock counts: -->
+        <!-- <field name="state" position='before'> -->
+        <!--   <field name="stock_A_real" /> -->
+        <!--   <field name="stock_A_virtual" /> -->
+        <!--   <field name="stock_B_real" /> -->
+        <!--   <field name="stock_B_virtual" /> -->
+        <!--   <field name="stock_C_real" /> -->
+        <!--   <field name="stock_C_virtual" /> -->
+        <!-- </field> -->
+      </field>
+    </record>
+
   </data>
 </openerp>
