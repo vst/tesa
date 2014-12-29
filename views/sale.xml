@@ -18,6 +18,7 @@
         </field>
         <!-- Add unit price -->
         <field name="price_subtotal" position="before">
+          <field name="currency_id" />
           <field name="price_unit" />
         </field>
       </field>
@@ -50,6 +51,44 @@
               </group>
             </page>
           </xpath>
+        </data>
+      </field>
+    </record>
+
+    <!-- VIEW: SALE QUOTATION TREE -->
+    <record id="view_quotation_tree" model="ir.ui.view">
+      <field name="name">sale.view.quotation.tree</field>
+      <field name="model">sale.order</field>
+      <field name="type">tree</field>
+      <field name="priority" eval="8"/>
+      <field name="inherit_id" ref="sale.view_quotation_tree"/>
+      <field name="arch" type="xml">
+        <data>
+          <!-- Add currency -->
+          <field name="amount_total" position="before">
+            <field name="currency_id" />
+          </field>
+          <!-- Add warehouse -->
+          <field name="state" position="after">
+            <field name="warehouse_id" />
+          </field>
+        </data>
+      </field>
+    </record>
+
+    <!-- VIEW: SALE ORDER TREE -->
+    <record id="view_order_tree" model="ir.ui.view">
+      <field name="name">sale.view.order.tree</field>
+      <field name="model">sale.order</field>
+      <field name="type">tree</field>
+      <field name="priority" eval="8"/>
+      <field name="inherit_id" ref="sale.view_order_tree"/>
+      <field name="arch" type="xml">
+        <data>
+          <!-- Add currency -->
+          <field name="amount_total" position="before">
+            <field name="currency_id" />
+          </field>
         </data>
       </field>
     </record>
