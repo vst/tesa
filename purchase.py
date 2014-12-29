@@ -10,6 +10,13 @@ _logger = logging.getLogger(__name__)
 class PurchaseOrderLineModel(osv.osv):
     _inherit = "purchase.order.line"
 
+    def get_currency(self, cr, uid, ids, field_names=None, arg=None, context=None):
+        result = {}
+        if not ids: return result
+        for line in self.browse(cr, uid, ids):
+            result[line.id] = line.order_id.currency_id
+        return result
+
     def browse_product_id(self, cr, uid, ids, context):
         ## Check the argument type:
         if isinstance(ids, (int, long)):
@@ -30,6 +37,9 @@ class PurchaseOrderLineModel(osv.osv):
             "nodestroy": True
         }
 
+    _columns = {
+        "currency_id": fields.function(get_currency, type="many2one", relation="res.currency", string="Currency"),
+    }
 
 PurchaseOrderLineModel()
 

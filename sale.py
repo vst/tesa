@@ -10,6 +10,13 @@ _logger = logging.getLogger(__name__)
 class SaleOrderLineModel(osv.osv):
     _inherit = "sale.order.line"
 
+    def get_currency(self, cr, uid, ids, field_names=None, arg=None, context=None):
+        result = {}
+        if not ids: return result
+        for line in self.browse(cr, uid, ids):
+            result[line.id] = line.order_id.pricelist_id.currency_id
+        return result
+
     def get_order_date_internal(self, cr, uid, id, field_names=None, arg=None, context=None):
         try:
             jj = self.pool.get('sale.order.line').read(cr, uid, id, ["order_id"], context=None)["order_id"][0]
@@ -44,6 +51,7 @@ class SaleOrderLineModel(osv.osv):
     _columns = {
         "product_oem": fields.many2one("product.product", "OEM", select=True),
         "order_date": fields.function(get_order_date, type="text", string="Order Date"),
+        "currency_id": fields.function(get_currency, type="many2one", relation="res.currency", string="Currency"),
     }
 
 
