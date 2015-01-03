@@ -14,7 +14,7 @@
         </field>
         <!-- Add order date -->
         <field name="order_partner_id" position="before">
-          <field name="order_date" />
+          <field name="date_order" />
         </field>
         <!-- Add unit price -->
         <field name="price_subtotal" position="before">

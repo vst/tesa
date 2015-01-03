@@ -17,14 +17,6 @@ class SaleOrderLineModel(osv.osv):
             result[line.id] = line.order_id.pricelist_id.currency_id
         return result
 
-    def get_order_date_internal(self, cr, uid, id, field_names=None, arg=None, context=None):
-        try:
-            jj = self.pool.get('sale.order.line').read(cr, uid, id, ["order_id"], context=None)["order_id"][0]
-            return self.pool.get('sale.order').read(cr, uid, jj, ["date_order"], context=None)["date_order"]
-        except:
-            pass
-        return "#N/A"
-
     def get_order_date(self, cr, uid, ids, field_names=None, arg=None, context=None):
         return dict([(i, self.get_order_date_internal(cr, uid, i, field_names=None, arg=None, context=None)) for i in ids])
 
@@ -50,11 +42,9 @@ class SaleOrderLineModel(osv.osv):
 
     _columns = {
         "product_oem": fields.many2one("product.product", "OEM", select=True),
-        "order_date": fields.function(get_order_date, type="text", string="Order Date"),
+        "date_order": fields.related("order_id", "date_order", string="Order Date", readonly=True, type="datetime"),
         "currency_id": fields.function(get_currency, type="many2one", relation="res.currency", string="Currency"),
     }
-
-
 
 
 SaleOrderLineModel()
