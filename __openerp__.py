@@ -23,6 +23,7 @@
     "update_xml": [
     ],
     "data": [
+        "views/base.xml",
         "views/product.xml",
         "views/brand.xml",
         "views/partner.xml",
