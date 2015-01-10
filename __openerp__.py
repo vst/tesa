@@ -1,10 +1,10 @@
 {
     "name": "tesa",
-    "version": "0.0.4",
+    "version": "0.0.5",
     "author": "Telosoft",
     "category": "Tools",
     "website": "http://www.telosoft.com",
-    "description": """Provides an ERP Implementation and Customization Addon (Version 0.0.4)""",
+    "description": """Provides an ERP Implementation and Customization Addon (Version 0.0.5)""",
     "depends": [
         "base",
         "account_accountant",
@@ -16,12 +16,14 @@
         "account_asset",
         "account_cancel",
         "stock_reserve_sale",
+        "partner_credit_limit",
     ],
     "init_xml": [
     ],
     "update_xml": [
     ],
     "data": [
+        "views/base.xml",
         "views/product.xml",
         "views/brand.xml",
         "views/partner.xml",

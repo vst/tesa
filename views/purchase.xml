@@ -24,9 +24,17 @@
       <field name="model">purchase.order.line</field>
       <field name="inherit_id" ref="purchase.purchase_order_line_tree"/>
       <field name="arch" type="xml">
+        <!-- Add order date -->
+        <field name="order_id" position="after">
+          <field name="date_order" />
+        </field>
         <!-- Add currency -->
         <field name="price_unit" position="before">
           <field name="currency_id" />
+        </field>
+        <!-- Show state -->
+        <field name="state" position="replace">
+          <field name="state" />
         </field>
       </field>
     </record>
