@@ -178,15 +178,15 @@
         <!-- Remove barcode -->
         <field name="ean13" position="replace" />
 
-        <!-- TODO: Enable location wise stock counts: -->
-        <!-- <field name="state" position='before'> -->
-        <!--   <field name="stock_A_real" /> -->
-        <!--   <field name="stock_A_virtual" /> -->
-        <!--   <field name="stock_B_real" /> -->
-        <!--   <field name="stock_B_virtual" /> -->
-        <!--   <field name="stock_C_real" /> -->
-        <!--   <field name="stock_C_virtual" /> -->
-        <!-- </field> -->
+        <!-- Enable location wise stock counts: -->
+        <field name="state" position='before'>
+          <field name="stock_A_real" />
+          <!-- <field name="stock_A_virtual" /> -->
+          <field name="stock_B_real" />
+          <!-- <field name="stock_B_virtual" /> -->
+          <field name="stock_C_real" />
+          <!-- <field name="stock_C_virtual" /> -->
+        </field>
       </field>
     </record>
 
