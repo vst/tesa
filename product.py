@@ -110,12 +110,36 @@ class ProductVariantModel(osv.osv):
         ## Done, return with a smiley face:
         return result
 
+    def get_stock_for_location(self, location, cr, uid, ids, field_names=None, arg=None, context=None):
+        result = {}
+        if not ids: return result
+        for id in ids:
+            location_obj = self.pool.get("stock.location")\
+                                    .search(cr, uid, [("complete_name", "=", "Physical Locations / " + location + " / Stock")],  context=context)
+            if len(location_obj) == 0:
+                result[id] = 0
+                continue
+            result[id] = sum([i["qty"] for i in
+                              self.pool.get("stock.quant").search_read(cr,
+                                                                       uid,
+                                                                       [("product_id", "=", id), ("location_id", "=", location_obj[0])],
+                                                                       fields=["qty"],
+                                                                       context=context)])
+        return result
+
+    def get_stock_for_location_A(self, *args, **kwargs):
+        return self.get_stock_for_location("A", *args, **kwargs)
+
+    def get_stock_for_location_B(self, *args, **kwargs):
+        return self.get_stock_for_location("B", *args, **kwargs)
+
+    def get_stock_for_location_C(self, *args, **kwargs):
+        return self.get_stock_for_location("C", *args, **kwargs)
+
     def get_stock_locations(self, cr, uid, ids, field_names=None, arg=None, context=None):
         result = {}
         if not ids: return result
-        context["only_with_stock"] = False
         for id in ids:
-            context["product_id"] = id
             location_obj = self.pool.get("stock.location")
             result[id] = location_obj.search(cr, uid, [("usage", "=", "internal")], context=context)
         return result
@@ -131,12 +155,12 @@ class ProductVariantModel(osv.osv):
         "stock_locations": fields.function(get_stock_locations, type="one2many", relation="stock.location", string="Stock by Location"),
 
         ## Computed stock data:
-        #"stock_A_real": fields.function(get_stock_A_real, type="double", string="Stock A (Real)"),
-        #"stock_A_virtual": fields.function(get_stock_A_virtual, type="double", string="Stock A (Virtual)"),
-        #"stock_B_real": fields.function(get_stock_B_real, type="double", string="Stock B (Real)"),
-        #"stock_B_virtual": fields.function(get_stock_B_virtual, type="double", string="Stock B (Virtual)"),
-        #"stock_C_real": fields.function(get_stock_C_real, type="double", string="Stock C (Real)"),
-        #"stock_C_virtual": fields.function(get_stock_C_virtual, type="double", string="Stock C (Virtual)"),
+        "stock_A_real": fields.function(get_stock_for_location_A, type="float", string="Stock A (Real)"),
+        #"stock_A_virtual": fields.function(get_stock_A_virtual, type="float", string="Stock A (Virtual)"),
+        "stock_B_real": fields.function(get_stock_for_location_B, type="float", string="Stock B (Real)"),
+        #"stock_B_virtual": fields.function(get_stock_B_virtual, type="float", string="Stock B (Virtual)"),
+        "stock_C_real": fields.function(get_stock_for_location_C, type="float", string="Stock C (Real)"),
+        #"stock_C_virtual": fields.function(get_stock_C_virtual, type="float", string="Stock C (Virtual)"),
     }
 
     def copy(self, cr, uid, id, default=None, context=None):
