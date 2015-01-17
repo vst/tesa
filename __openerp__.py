@@ -38,7 +38,9 @@
         "static/src/xml/flowchart.xml",
     ],
     "js": [
-        "static/src/js/tesa.js"
+        "static/src/js/handlebars.js",
+        "static/src/js/jquery.hotkeys.js",
+        "static/src/js/tesa.js",
     ],
     "css": [
         "static/src/css/tesa.css"

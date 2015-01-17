@@ -1,5 +1,7 @@
 ## Imports
+from openerp.osv import osv, fields, expression
 from openerp.osv import fields, osv
+import re
 import logging
 
 
@@ -62,6 +64,32 @@ class ProductVariantModel(osv.osv):
     _sql_constraints = [
         ("default_code_uniq", "unique(default_code)", "Product Reference (Part Number) must be unique!"),
     ]
+
+    def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):
+        if len(name) < 3:
+            return []
+        print "Deneme", name, args, operator, context
+        if not args:
+            args = []
+
+        ## Search for the default code:
+        ids = []
+        if name:
+            positive_operators = ['=', 'ilike', '=ilike', 'like', '=like']
+            if operator in positive_operators:
+                ids = self.search(cr, user, [("default_code", "ilike", name.strip())] + args, limit=limit, context=context)
+        result = self.name_get(cr, user, ids, context=context)
+
+        ## Exclude from the previous search and return the combination:
+        super_result = []
+        super_result = super(ProductVariantModel, self).name_search(cr, user, name, args, operator, context, limit - len(result))
+        return result + [(i[0], "!" + i[1]) for i in super_result if not (i[0] in set(ids))]
+
+    def create(self, cr, uid, vals, context=None):
+        if context is None:
+            context = {}
+        ctx = dict(context or {}, create_product_product=True)
+        return super(product_product, self).create(cr, uid, vals, context=ctx)
 
     def get_related_oems(self, cr, uid, ids, field_names=None, arg=None, context=None):
         """

@@ -51,5 +51,71 @@
         </div>
       </xpath>
     </template>
+
+    <template id="web_layout" name="web_layout" inherit_id="web.webclient_bootstrap">
+      <xpath expr="//t/div/table" position="after">
+
+        <div id="tesaProductSearchDialog" class="modal fade">
+          <div class="modal-dialog modal-lg" style="width:95%;min-width:900px;">
+            <div class="modal-content">
+              <div class="modal-header">
+                <div class="row">
+                  <div class="col-md-6">
+                    <input type="text" class="form-control input-sm" id="teseProductSearchKeyword"/>
+                  </div>
+                  <div class="col-md-6">
+                    <button id="tesaProductSearchButton">Search</button>
+                  </div>
+                </div>
+              </div>
+              <div class="modal-body" id="tesaProductSearchResultContainer"></div>
+            </div><!-- /.modal-content -->
+          </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+
+        <script id="tesaProductSearchResultTemplate" type="text/x-handlebars-template">
+          <table class="table table-condensed table-striped table-hover">
+            <tr>
+              <th>#</th>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Brand</th>
+              <th style="text-align:right;">Price</th>
+              <th style="text-align:right;">CHS</th>
+              <th style="text-align:right;">EXP</th>
+              <th style="text-align:right;">MIN</th>
+              <th style="text-align:right;">SNP</th>
+              <th style="text-align:right;">HND</th>
+              <th style="text-align:right;">INC</th>
+              <th style="text-align:right;">FUT</th>
+              <th style="text-align:right;">@A</th>
+              <th style="text-align:right;">@B</th>
+              <th style="text-align:right;">@C</th>
+            </tr>
+            {{#each items}}
+            <tr>
+              <td>{{@index}}</td>
+              <td>{{default_code}}</td>
+              <td><a href="/web?#id={{id}}&amp;view_type=form&amp;model=product.product&amp;action=135" target="_blank">{{name}}</a></td>
+              <td>{{lookup brand 1}}</td>
+              <td style="text-align:right;">{{formatCurrency lst_price}}</td>
+              <td style="text-align:right;">{{formatCurrency minimum_cash_sales_price}}</td>
+              <td style="text-align:right;">{{formatCurrency export_sales_price}}</td>
+              <td style="text-align:right;">{{formatCurrency minimum_sales_price}}</td>
+              <td style="text-align:right;">{{formatCurrency special_sales_price}}</td>
+              <td style="text-align:right;">{{qty_available}}</td>
+              <td style="text-align:right;">{{incoming_qty}}</td>
+              <td style="text-align:right;">{{virtual_available}}</td>
+              <td style="text-align:right;">{{stock_A_real}}</td>
+              <td style="text-align:right;">{{stock_B_real}}</td>
+              <td style="text-align:right;">{{stock_C_real}}</td>
+            </tr>
+            {{/each}}
+          </table>
+        </script>
+
+      </xpath>
+    </template>
+
   </data>
 </openerp>
