@@ -1,10 +1,10 @@
 {
     "name": "tesa",
-    "version": "0.0.6",
+    "version": "0.0.7",
     "author": "Telosoft",
     "category": "Tools",
     "website": "http://www.telosoft.com",
-    "description": """Provides an ERP Implementation and Customization Addon (Version 0.0.6)""",
+    "description": """Provides an ERP Implementation and Customization Addon (Version 0.0.7)""",
     "depends": [
         "base",
         "account_accountant",
@@ -38,7 +38,9 @@
         "static/src/xml/flowchart.xml",
     ],
     "js": [
-        "static/src/js/tesa.js"
+        "static/src/js/handlebars.js",
+        "static/src/js/jquery.hotkeys.js",
+        "static/src/js/tesa.js",
     ],
     "css": [
         "static/src/css/tesa.css"
