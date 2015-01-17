@@ -4,7 +4,7 @@
     "author": "Telosoft",
     "category": "Tools",
     "website": "http://www.telosoft.com",
-    "description": """Provides an ERP Implementation and Customization Addon (Version 0.0.7dev)""",
+    "description": """Provides an ERP Implementation and Customization Addon (Version 0.0.7)""",
     "depends": [
         "base",
         "account_accountant",
