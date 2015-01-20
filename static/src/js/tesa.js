@@ -3088,9 +3088,6 @@ var __module0__ = (function(__dependency1__, __dependency2__, __dependency3__, _
 }));
 
 
-
-
-
 function UserVoiceWidget () {
     // Include the UserVoice JavaScript SDK (only needed once on a page)
     UserVoice=window.UserVoice||[];(function(){var uv=document.createElement('script');uv.type='text/javascript';uv.async=true;uv.src='//widget.uservoice.com/j0YBbI3Nso9zDOqKtSw.js';var s=document.getElementsByTagName('script')[0];s.parentNode.insertBefore(uv,s)})();
@@ -3143,6 +3140,95 @@ Handlebars.registerHelper('formatCurrency', function(value) {
 Handlebars.registerHelper('add1', function(value) {
     return value + 1;
 });
+
+Handlebars.registerHelper('cartsel', function(id, price, qty, xname, uid) {
+    return JSON.stringify({
+        id: id,
+        price: price,
+        qty: qty,
+        name: xname,
+        uid: uid,
+    });
+});
+
+Handlebars.registerHelper('cartselname', function(id, price, qty) {
+    return "" + id + price + qty + ("" + Math.random()).split(".")[1];
+});
+
+var IDENTIFIER_CART = "tesa:cart";
+
+function clearCart () {
+    window.localStorage.setItem(IDENTIFIER_CART, JSON.stringify([]));
+}
+
+function getCart () {
+    var cart = window.localStorage.getItem(IDENTIFIER_CART);
+    if (cart == null) {
+        window.localStorage.setItem(IDENTIFIER_CART, JSON.stringify([]));
+    }
+    return JSON.parse(window.localStorage.getItem(IDENTIFIER_CART));
+}
+
+function addItemToCart (item) {
+    var items = getCart();
+    items.push(item);
+    window.localStorage.setItem(IDENTIFIER_CART, JSON.stringify(items));
+    return getCart();
+}
+
+function putItemsToCart (items) {
+    window.localStorage.setItem(IDENTIFIER_CART, JSON.stringify(items));
+    return getCart();
+}
+
+function removeItemFromCart (uid) {
+    var items = getCart();
+    putItemsToCart(items.filter(function (x) {
+        return x.uid != uid;
+    }));
+}
+
+function createNewSalesOrder () {
+    var allVals = [];
+    $('input[class=tesa-cart-item]:checked').each(function() {
+        allVals.push(JSON.parse($(this).val()));
+    });
+
+    if (allVals.length == 0) {
+        alert("No products chosen.");
+        return;
+    }
+
+    var Sale = new openerp.Model("sale.order");
+    Sale.call("create", [{partner_id: 1}], {}).then(function (saleOrderId) {
+        if (!saleOrderId) {
+            alert("Can not create. Contact administrator.");
+            return;
+        }
+        var order_lines = [];
+        allVals.forEach(function (line) {
+            order_lines.push([0, false, {
+                delay: 0,
+                name: line.name,
+                product_id: line.id,
+                price_unit: line.price,
+                product_uom_qty: line.qty
+            }]);
+        });
+        Sale.call("write", [[saleOrderId], {order_line: order_lines}], {}).then(function () {
+            Sale.query(["id", "name"])
+                .filter([["id", "=", saleOrderId]])
+                .all()
+                .then(function (data) {
+                    alert("Sales order created: " + data[0].name);
+                    allVals.forEach(function (x) {
+                        removeItemFromCart(x.uid);
+                    });
+                    $("#tesaShowCartDialog").modal("toggle");
+                })
+        })
+    })
+}
 
 function tesaDisplayOEMS (id) {
     // Check if toggle:
@@ -3211,14 +3297,81 @@ function tesaDisplayOEMS (id) {
         });
 }
 
+function addPriceForCart (price) {
+    $("#tesaProductAddToCartPrice").val(price);
+}
+
+function addToCartDialog(id) {
+    // Get the product class:
+    var Product = new openerp.Model("product.product");
+
+    // Fields:
+    var fields = [
+        "default_code",
+        "name",
+        "brand",
+        "lst_price",
+        "minimum_cash_sales_price",
+        "export_sales_price",
+        "minimum_sales_price",
+        "special_sales_price",
+        "qty_available",
+        "incoming_qty",
+        "virtual_available",
+        "stock_A_real",
+        "stock_B_real",
+        "stock_C_real"]
+
+    // Get OEMs:
+    Product.query(fields)
+        .filter([["id", "=", id]])
+        .all().then(function (items) {
+            if (items.length == 0) {
+                alert("No product found.");
+                return;
+            }
+            var source   = $("#tesaProductAddToCartTemplate").html();
+            var template = Handlebars.compile(source);
+            var html = template(items[0]);
+
+            $("#tesaProductAddToCartContainer").html(html);
+            $("#tesaProductAddToCartDialog").modal("toggle");
+        });
+}
+
+function addToCart (id) {
+    addItemToCart({
+        id: id,
+        name: $("#tesaProductAddToCartName").val(),
+        code: $("#tesaProductAddToCartCode").val(),
+        qty: $("#tesaProductAddToCartQuantity").val(),
+        price: $("#tesaProductAddToCartPrice").val(),
+        uid: "" + Math.random(),
+    });
+    $("#tesaProductAddToCartContainer").html("");
+    $("#tesaProductAddToCartDialog").modal("toggle");
+}
+
+function showCart () {
+    var source   = $("#tesaCartTemplate").html();
+    var template = Handlebars.compile(source);
+    var html = template(getCart());
+    $("#tesaShowCartContainer").html(html);
+    $("#tesaShowCartDialog").modal("toggle");
+}
+
+function showProductSearch () {
+    $("#tesaProductSearchDialog").modal("toggle").on('shown.bs.modal', function () {
+        $("#teseProductSearchKeyword").focus();
+    });
+}
+
 openerp.tesa = function (instance) {
     // Loading tesa:
     console.log("Loading tesa");
 
     $(document).bind('keydown', 'ctrl+s', function () {
-        $("#tesaProductSearchDialog").modal("toggle").on('shown.bs.modal', function () {
-            $("#teseProductSearchKeyword").focus();
-        });
+        showProductSearch();
     });
 
     $("#tesaProductSearchButton").click(function () {
@@ -3264,4 +3417,12 @@ openerp.tesa = function (instance) {
     instance.tesa.action = instance.web.Widget.extend({
         template: "flowchart.action"
     });
+
+    $(".oe_application_menu_placeholder").append(
+        "<li style='display: block;'><a href='javascript:showCart()' class='oe_menu_leaf'><i class='glyphicon glyphicon-shopping-cart'></i></a>"
+    );
+
+    $(".oe_application_menu_placeholder").append(
+        "<li style='display: block;'><a href='javascript:showProductSearch()' class='oe_menu_leaf'><i class='glyphicon glyphicon-search'></i></a>"
+    );
 };

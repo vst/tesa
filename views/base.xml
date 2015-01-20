@@ -55,28 +55,110 @@
     <template id="web_layout" name="web_layout" inherit_id="web.webclient_bootstrap">
       <xpath expr="//t/div/table" position="after">
 
+        <div id="tesaShowCartDialog" class="modal fade">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h4>Existing Items in the Cart</h4>
+              </div>
+              <div class="modal-body" id="tesaShowCartContainer"></div>
+            </div><!-- /.modal-content -->
+          </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+
         <div id="tesaProductSearchDialog" class="modal fade">
           <div class="modal-dialog modal-lg" style="width:95%;min-width:900px;">
             <div class="modal-content">
-              <div class="modal-header">
-                <div class="row">
-                  <div class="col-md-6">
-                    <input type="text" class="form-control input-sm" id="teseProductSearchKeyword"/>
-                  </div>
-                  <div class="col-md-6">
-                    <button id="tesaProductSearchButton">Search</button>
-                  </div>
-                </div>
+              <div class="modal-header bg-info">
+                <span class="oe_form_field">
+                  <button id="tesaProductSearchButton" style="float: right;">Search</button>
+                  <label for="teseProductSearchKeyword" style="float: left;">Product Code:</label>
+                  <span style="overflow: hidden;display: block;padding: 0 4px 0 10px;"><input type="text" id="teseProductSearchKeyword" style="width:100%" onkeydown="if (event.keyCode == 13) document.getElementById('tesaProductSearchButton').click()" /></span>
+                </span>
               </div>
               <div class="modal-body" id="tesaProductSearchResultContainer"></div>
             </div><!-- /.modal-content -->
           </div><!-- /.modal-dialog -->
         </div><!-- /.modal -->
 
+        <div id="tesaProductAddToCartDialog" class="modal fade">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-body" id="tesaProductAddToCartContainer"></div>
+            </div><!-- /.modal-content -->
+          </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+
+        <script id="tesaCartTemplate" type="text/x-handlebars-template">
+          <div class="row">
+            <div class="col-md-8">
+              <table class="table table-condensed table-bordered">
+                <tr>
+                  <th>Code</th>
+                  <th>Name</th>
+                  <th style="text-align:right;">Price</th>
+                  <th style="text-align:right;">Quantity</th>
+                  <th></th>
+                </tr>
+                {{#each .}}
+                <tr>
+                  <td>{{code}}</td>
+                  <td>{{name}}</td>
+                  <td style="text-align:right;">{{price}}</td>
+                  <td style="text-align:right;">{{qty}}</td>
+                  <td><input type="checkbox" class="tesa-cart-item" value="{{cartsel id price qty name uid}}" name="{{uid}}"/></td>
+                </tr>
+                {{/each}}
+              </table>
+            </div>
+            <div class="col-md-4">
+              <a href="javascript:createNewSalesOrder()" class="btn btn-primary btn-sm">Create New Sales Quotation</a>
+            </div>
+          </div>
+        </script>
+
+        <script id="tesaProductAddToCartTemplate" type="text/x-handlebars-template">
+          <div class="row">
+            <div class="col-md-6">
+              <table class="table">
+                <tr><td>Code</td><td>{{default_code}}</td></tr>
+                <tr><td>Name</td><td><a href="/web?#id={{id}}&amp;view_type=form&amp;model=product.product&amp;action=135" target="_blank">{{name}}</a></td></tr>
+                <tr><td>Brand</td><td>{{lookup brand 1}}</td></tr>
+                <tr><td>List Price</td><td style="text-align:right;"><a href="javascript:addPriceForCart({{lst_price}});">{{formatCurrency lst_price}}</a></td></tr>
+                <tr><td>Cash Sales Price</td><td style="text-align:right;"><a href="javascript:addPriceForCart({{minimum_cash_sales_price}});">{{formatCurrency minimum_cash_sales_price}}</a></td></tr>
+                <tr><td>Export Sales Price</td><td style="text-align:right;"><a href="javascript:addPriceForCart({{export_sales_price}});">{{formatCurrency export_sales_price}}</a></td></tr>
+                <tr><td>Minimum Sales Price</td><td style="text-align:right;"><a href="javascript:addPriceForCart({{minimum_sales_price}});">{{formatCurrency minimum_sales_price}}</a></td></tr>
+                <tr><td>Special Sales Price</td><td style="text-align:right;"><a href="javascript:addPriceForCart({{special_sales_price}});">{{formatCurrency special_sales_price}}</a></td></tr>
+                <tr><td>In Hand</td><td style="text-align:right;">{{qty_available}}</td></tr>
+                <tr><td>Incoming/Outgoing</td><td style="text-align:right;">{{incoming_qty}}</td></tr>
+                <tr><td>Future Quanitty</td><td style="text-align:right;">{{virtual_available}}</td></tr>
+                <tr><td>A Quantity</td><td style="text-align:right;">{{stock_A_real}}</td></tr>
+                <tr><td>B Quantity</td><td style="text-align:right;">{{stock_B_real}}</td></tr>
+                <tr><td>C Quantity</td><td style="text-align:right;">{{stock_C_real}}</td></tr>
+              </table>
+            </div>
+            <div class="col-md-6">
+              <table class="table">
+                <tr>
+                  <td>Quantity</td><td><input id="tesaProductAddToCartQuantity" /></td>
+                </tr>
+                <tr>
+                  <td>Price</td><td><input id="tesaProductAddToCartPrice" /></td>
+                </tr>
+                <tr>
+                  <input type="hidden" id="tesaProductAddToCartCode" value="{{default_code}}" />
+                  <input type="hidden" id="tesaProductAddToCartName" value="{{name}}" />
+                  <td></td><td><a href="javascript:addToCart({{id}})" class="btn btn-default">Add to Cart</a></td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </script>
+
         <script id="tesaProductSearchResultTemplate" type="text/x-handlebars-template">
           <table class="table table-condensed table-hover">
             <tr>
-              <th>#</th>
+              <th style="text-align:right;">#</th>
               <th>ID</th>
               <th>Name</th>
               <th>Brand</th>
@@ -91,6 +173,7 @@
               <th style="text-align:right;">@A</th>
               <th style="text-align:right;">@B</th>
               <th style="text-align:right;">@C</th>
+              <th style="text-align:right;"></th>
             </tr>
             {{#each items}}
             <tr id="product-{{id}}">
@@ -109,6 +192,7 @@
               <td style="text-align:right;">{{stock_A_real}}</td>
               <td style="text-align:right;">{{stock_B_real}}</td>
               <td style="text-align:right;">{{stock_C_real}}</td>
+              <td style="text-align:right;"><a href="javascript:addToCartDialog({{id}})"><i class="glyphicon glyphicon-shopping-cart"></i></a></td>
             </tr>
             {{/each}}
           </table>
@@ -132,6 +216,7 @@
             <td style="text-align:right;">{{stock_A_real}}</td>
             <td style="text-align:right;">{{stock_B_real}}</td>
             <td style="text-align:right;">{{stock_C_real}}</td>
+            <td style="text-align:right;"><a href="javascript:addToCartDialog({{id}})"><i class="glyphicon glyphicon-shopping-cart"></i></a></td>
           </tr>
           {{/each}}
         </script>
@@ -139,7 +224,7 @@
         <script id="tesaProductSearchResultEmptyRowTemplate" type="text/x-handlebars-template">
           <tr class="bg-danger product-oem-for-{{id}}" style="border-right:2px solid black;border-left:2px solid black;border-bottom:2px solid black;">
             <td style="text-align:right;" nowrap="nowrap"><i class="glyphicon glyphicon-exclamation-sign"></i></td>
-            <td colspan="14">No OEM.</td>
+            <td colspan="15">No OEM.</td>
           </tr>
         </script>
 
