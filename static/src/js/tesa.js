@@ -3145,6 +3145,17 @@ Handlebars.registerHelper('add1', function(value) {
 });
 
 function tesaDisplayOEMS (id) {
+    // Check if toggle:
+    if ($(".product-oem-for-" + id).length > 0) {
+        $(".product-oem-for-" + id).remove()
+        $("#product-" + id).css("border-top", "none");
+        $("#product-" + id).css("border-left", "none");
+        $("#product-" + id).css("border-right", "none");
+        $("#product-" + id).find("i").removeClass("glyphicon-chevron-down")
+        $("#product-" + id).find("i").addClass("glyphicon-chevron-right")
+        return;
+    }
+
     // Get the product class:
     var Product = new openerp.Model("product.product");
 
@@ -3173,6 +3184,8 @@ function tesaDisplayOEMS (id) {
                 // Get revids:
                 revids = items[0].reverse_oem_ids
 
+                $("#product-" + id).find("i").removeClass("glyphicon-chevron-right")
+                $("#product-" + id).find("i").addClass("glyphicon-chevron-down")
                 $("#product-" + id).css("border-top", "2px solid black");
                 $("#product-" + id).css("border-left", "2px solid black");
                 $("#product-" + id).css("border-right", "2px solid black");
@@ -3184,14 +3197,14 @@ function tesaDisplayOEMS (id) {
                         .all().then(function (items) {
                             var source   = $("#tesaProductSearchResultRowTemplate").html();
                             var template = Handlebars.compile(source);
-                            var html = template({items: items});
+                            var html = template({items: items, id: id});
                             $("#product-" + id).after(html);
                         });
                 }
                 else {
                     var source   = $("#tesaProductSearchResultEmptyRowTemplate").html();
                     var template = Handlebars.compile(source);
-                    var html = template();
+                    var html = template({id: id});
                     $("#product-" + id).after(html);
                 }
             }

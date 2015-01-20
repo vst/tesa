@@ -94,7 +94,7 @@
             </tr>
             {{#each items}}
             <tr id="product-{{id}}">
-              <td style="text-align:right;" nowrap="nowrap">{{add1 @index}} <a href="javascript:tesaDisplayOEMS({{id}})"><i class="glyphicon glyphicon glyphicon-list"></i></a></td>
+              <td style="text-align:right;" nowrap="nowrap">{{add1 @index}} <a href="javascript:tesaDisplayOEMS({{id}})"><i class="glyphicon glyphicon-chevron-right"></i></a></td>
               <td>{{default_code}}</td>
               <td><a href="/web?#id={{id}}&amp;view_type=form&amp;model=product.product&amp;action=135" target="_blank">{{name}}</a></td>
               <td>{{lookup brand 1}}</td>
@@ -116,8 +116,8 @@
 
         <script id="tesaProductSearchResultRowTemplate" type="text/x-handlebars-template">
           {{#each items}}
-          <tr id="product-oem-{{id}}" class="bg-warning" style="border-right:2px solid black;border-left:2px solid black;{{#if @last}}border-bottom:2px solid black;{{/if}}">
-            <td style="text-align:right;" nowrap="nowrap"><i class="glyphicon glyphicon-chevron-right"></i></td>
+          <tr id="product-oem-{{id}}" class="bg-warning product-oem-for-{{../id}}" style="border-right:2px solid black;border-left:2px solid black;{{#if @last}}border-bottom:2px solid black;{{/if}}">
+            <td style="text-align:right;" nowrap="nowrap"><i class="glyphicon glyphicon-list"></i></td>
             <td>{{default_code}}</td>
             <td><a href="/web?#id={{id}}&amp;view_type=form&amp;model=product.product&amp;action=135" target="_blank">{{name}}</a></td>
             <td>{{lookup brand 1}}</td>
@@ -137,8 +137,8 @@
         </script>
 
         <script id="tesaProductSearchResultEmptyRowTemplate" type="text/x-handlebars-template">
-          <tr class="bg-danger" style="border-right:2px solid black;border-left:2px solid black;border-bottom:2px solid black;">
-            <td style="text-align:right;" nowrap="nowrap"><i class="glyphicon glyphicon-chevron-right"></i></td>
+          <tr class="bg-danger product-oem-for-{{id}}" style="border-right:2px solid black;border-left:2px solid black;border-bottom:2px solid black;">
+            <td style="text-align:right;" nowrap="nowrap"><i class="glyphicon glyphicon-exclamation-sign"></i></td>
             <td colspan="14">No OEM.</td>
           </tr>
         </script>
