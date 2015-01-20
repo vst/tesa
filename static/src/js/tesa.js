@@ -3140,6 +3140,64 @@ Handlebars.registerHelper('formatCurrency', function(value) {
     return numeral(value).format("0.00");
 });
 
+Handlebars.registerHelper('add1', function(value) {
+    return value + 1;
+});
+
+function tesaDisplayOEMS (id) {
+    // Get the product class:
+    var Product = new openerp.Model("product.product");
+
+    // Fields:
+    var fields = [
+        "default_code",
+        "name",
+        "brand",
+        "lst_price",
+        "minimum_cash_sales_price",
+        "export_sales_price",
+        "minimum_sales_price",
+        "special_sales_price",
+        "qty_available",
+        "incoming_qty",
+        "virtual_available",
+        "stock_A_real",
+        "stock_B_real",
+        "stock_C_real"]
+
+    // Get OEMs:
+    Product.query(["id", "reverse_oem_ids"])
+        .filter([["id", "=", id]])
+        .all().then (function (items) {
+            if (items && items.length > 0) {
+                // Get revids:
+                revids = items[0].reverse_oem_ids
+
+                $("#product-" + id).css("border-top", "2px solid black");
+                $("#product-" + id).css("border-left", "2px solid black");
+                $("#product-" + id).css("border-right", "2px solid black");
+
+                if(revids.length > 0) {
+                    // Filter and display:
+                    Product.query(fields)
+                        .filter([["id", "in", revids]])
+                        .all().then(function (items) {
+                            var source   = $("#tesaProductSearchResultRowTemplate").html();
+                            var template = Handlebars.compile(source);
+                            var html = template({items: items});
+                            $("#product-" + id).after(html);
+                        });
+                }
+                else {
+                    var source   = $("#tesaProductSearchResultEmptyRowTemplate").html();
+                    var template = Handlebars.compile(source);
+                    var html = template();
+                    $("#product-" + id).after(html);
+                }
+            }
+        });
+}
+
 openerp.tesa = function (instance) {
     // Loading tesa:
     console.log("Loading tesa");
@@ -3151,8 +3209,6 @@ openerp.tesa = function (instance) {
     });
 
     $("#tesaProductSearchButton").click(function () {
-        console.log("Searching");
-
         // Get the keyword:
         var keyword = $("#teseProductSearchKeyword").val().trim();
 
@@ -3181,7 +3237,6 @@ openerp.tesa = function (instance) {
             .filter([["default_code", "ilike", keyword]])
             .limit(100)
             .all().then(function (items) {
-                console.log(items);
                 var source   = $("#tesaProductSearchResultTemplate").html();
                 var template = Handlebars.compile(source);
                 $("#tesaProductSearchResultContainer").html(template({fields: fields, items: items}));

@@ -74,7 +74,7 @@
         </div><!-- /.modal -->
 
         <script id="tesaProductSearchResultTemplate" type="text/x-handlebars-template">
-          <table class="table table-condensed table-striped table-hover">
+          <table class="table table-condensed table-hover">
             <tr>
               <th>#</th>
               <th>ID</th>
@@ -93,8 +93,8 @@
               <th style="text-align:right;">@C</th>
             </tr>
             {{#each items}}
-            <tr>
-              <td>{{@index}}</td>
+            <tr id="product-{{id}}">
+              <td style="text-align:right;" nowrap="nowrap">{{add1 @index}} <a href="javascript:tesaDisplayOEMS({{id}})"><i class="glyphicon glyphicon glyphicon-list"></i></a></td>
               <td>{{default_code}}</td>
               <td><a href="/web?#id={{id}}&amp;view_type=form&amp;model=product.product&amp;action=135" target="_blank">{{name}}</a></td>
               <td>{{lookup brand 1}}</td>
@@ -112,6 +112,35 @@
             </tr>
             {{/each}}
           </table>
+        </script>
+
+        <script id="tesaProductSearchResultRowTemplate" type="text/x-handlebars-template">
+          {{#each items}}
+          <tr id="product-oem-{{id}}" class="bg-warning" style="border-right:2px solid black;border-left:2px solid black;{{#if @last}}border-bottom:2px solid black;{{/if}}">
+            <td style="text-align:right;" nowrap="nowrap"><i class="glyphicon glyphicon-chevron-right"></i></td>
+            <td>{{default_code}}</td>
+            <td><a href="/web?#id={{id}}&amp;view_type=form&amp;model=product.product&amp;action=135" target="_blank">{{name}}</a></td>
+            <td>{{lookup brand 1}}</td>
+            <td style="text-align:right;">{{formatCurrency lst_price}}</td>
+            <td style="text-align:right;">{{formatCurrency minimum_cash_sales_price}}</td>
+            <td style="text-align:right;">{{formatCurrency export_sales_price}}</td>
+            <td style="text-align:right;">{{formatCurrency minimum_sales_price}}</td>
+            <td style="text-align:right;">{{formatCurrency special_sales_price}}</td>
+            <td style="text-align:right;">{{qty_available}}</td>
+            <td style="text-align:right;">{{incoming_qty}}</td>
+            <td style="text-align:right;">{{virtual_available}}</td>
+            <td style="text-align:right;">{{stock_A_real}}</td>
+            <td style="text-align:right;">{{stock_B_real}}</td>
+            <td style="text-align:right;">{{stock_C_real}}</td>
+          </tr>
+          {{/each}}
+        </script>
+
+        <script id="tesaProductSearchResultEmptyRowTemplate" type="text/x-handlebars-template">
+          <tr class="bg-danger" style="border-right:2px solid black;border-left:2px solid black;border-bottom:2px solid black;">
+            <td style="text-align:right;" nowrap="nowrap"><i class="glyphicon glyphicon-chevron-right"></i></td>
+            <td colspan="14">No OEM.</td>
+          </tr>
         </script>
 
       </xpath>
