@@ -3263,12 +3263,12 @@ function tesaDisplayOEMS (id) {
         "stock_C_real"]
 
     // Get OEMs:
-    Product.query(["id", "reverse_oem_ids"])
+    Product.query(["id", "related_oems"])
         .filter([["id", "=", id]])
         .all().then (function (items) {
             if (items && items.length > 0) {
                 // Get revids:
-                revids = items[0].reverse_oem_ids
+                revids = items[0].related_oems
 
                 $("#product-" + id).find("i").removeClass("glyphicon-chevron-right")
                 $("#product-" + id).find("i").addClass("glyphicon-chevron-down")
