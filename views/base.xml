@@ -1,6 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
   <data>
+    <!-- ASSETS -->
+    <template id="assets_backend" name="tesa assets" inherit_id="web.assets_backend">
+      <xpath expr="." position="inside">
+        <link rel="stylesheet" href="/tesa/static/src/css/tesa.css"/>
+        <script type="text/javascript" src="/tesa/static/src/js/ext/handlebars-v2.0.0.js"></script>
+        <script type="text/javascript" src="/tesa/static/src/js/ext/jquery.hotkeys.js"></script>
+        <script type="text/javascript" src="/tesa/static/src/js/ext/numeral.js"></script>
+        <script type="text/javascript" src="/tesa/static/src/js/lib/uservoice.js"></script>
+        <script type="text/javascript" src="/tesa/static/src/js/lib/handlebar_helpers.js"></script>
+        <script type="text/javascript" src="/tesa/static/src/js/lib/cart.js"></script>
+        <script type="text/javascript" src="/tesa/static/src/js/lib/search.js"></script>
+        <script type="text/javascript" src="/tesa/static/src/js/tesa.js"></script>
+      </xpath>
+    </template>
+
     <!-- CHANGE COMPANY HEADER -->
     <template id="external_layout_header" inherit_id="report.external_layout_header">
       <xpath expr="//div[@class='header']" position="replace">

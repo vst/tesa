@@ -37,14 +37,6 @@
         "static/src/xml/base.xml",
         "static/src/xml/flowchart.xml",
     ],
-    "js": [
-        "static/src/js/handlebars.js",
-        "static/src/js/jquery.hotkeys.js",
-        "static/src/js/tesa.js",
-    ],
-    "css": [
-        "static/src/css/tesa.css"
-    ],
     "installable": True,
     "auto_install": False,
 }
