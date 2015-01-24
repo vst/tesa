@@ -114,6 +114,7 @@ function addToCart (id) {
         code: $("#tesaProductAddToCartCode").val(),
         qty: $("#tesaProductAddToCartQuantity").val(),
         price: $("#tesaProductAddToCartPrice").val(),
+        tag: $("#tesaProductAddToCartTag").val(),
         uid: "" + Math.random(),
     });
     $("#tesaProductAddToCartContainer").html("");

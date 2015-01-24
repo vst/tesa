@@ -113,6 +113,7 @@
                   <th>Name</th>
                   <th style="text-align:right;">Price</th>
                   <th style="text-align:right;">Quantity</th>
+                  <th style="text-align:center;">Tag</th>
                   <th></th>
                 </tr>
                 {{#each .}}
@@ -121,6 +122,7 @@
                   <td>{{name}}</td>
                   <td style="text-align:right;">{{price}}</td>
                   <td style="text-align:right;">{{qty}}</td>
+                  <td style="text-align:center;">{{tag}}</td>
                   <td><input type="checkbox" class="tesa-cart-item" value="{{cartsel id price qty name uid}}" name="{{uid}}"/></td>
                 </tr>
                 {{/each}}
@@ -159,6 +161,9 @@
                 </tr>
                 <tr>
                   <td>Price</td><td><input id="tesaProductAddToCartPrice" /></td>
+                </tr>
+                <tr>
+                  <td>Tag</td><td><input id="tesaProductAddToCartTag" /></td>
                 </tr>
                 <tr>
                   <input type="hidden" id="tesaProductAddToCartCode" value="{{default_code}}" />
