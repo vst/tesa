@@ -151,13 +151,23 @@ function searchProduct () {
         "stock_B_real",
         "stock_C_real"]
 
+    var source   = $("#tesaProductSearchResultTableTemplate").html();
+    var template = Handlebars.compile(source);
+    $("#tesaProductSearchResultContainer").html(template());
+
+    source   = $("#tesaProductSearchResultBodyTemplate").html();
+    template = Handlebars.compile(source);
+    $(".tesaProductSearchResultTable").append(template({searchcode: keyword, searchcodehash: keyword.hashCode()}));
+
     // Filter and display:
+    var Product = new openerp.Model("product.product");
     Product.query(fields)
         .filter([["default_code", "ilike", keyword]])
         .limit(100)
         .all().then(function (items) {
             var source   = $("#tesaProductSearchResultTemplate").html();
             var template = Handlebars.compile(source);
-            $("#tesaProductSearchResultContainer").html(template({fields: fields, items: items}));
+            $(".tesaProductSearchResults-" + keyword.hashCode()).html(template({searchkey: keyword, fields: fields, items: items}));
+            $(".tesaProductSearchResultsHeader-" + keyword.hashCode() + " .tesa-loading").html("");
         });
 }

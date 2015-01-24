@@ -8,10 +8,12 @@
         <script type="text/javascript" src="/tesa/static/src/js/ext/handlebars-v2.0.0.js"></script>
         <script type="text/javascript" src="/tesa/static/src/js/ext/jquery.hotkeys.js"></script>
         <script type="text/javascript" src="/tesa/static/src/js/ext/numeral.js"></script>
+        <script type="text/javascript" src="/tesa/static/src/js/lib/utils.js"></script>
         <script type="text/javascript" src="/tesa/static/src/js/lib/uservoice.js"></script>
         <script type="text/javascript" src="/tesa/static/src/js/lib/handlebar_helpers.js"></script>
         <script type="text/javascript" src="/tesa/static/src/js/lib/cart.js"></script>
         <script type="text/javascript" src="/tesa/static/src/js/lib/search.js"></script>
+        <script type="text/javascript" src="/tesa/static/src/js/lib/multiplesearch.js"></script>
         <script type="text/javascript" src="/tesa/static/src/js/tesa.js"></script>
       </xpath>
     </template>
@@ -96,6 +98,21 @@
           </div><!-- /.modal-dialog -->
         </div><!-- /.modal -->
 
+        <div id="tesaMultipleProductSearchDialog" class="modal fade">
+          <div class="modal-dialog modal-lg" style="width:95%;min-width:900px;">
+            <div class="modal-content">
+              <div class="modal-header bg-info clearfix">
+                <div><textarea id="teseMultipleProductSearchKeyword" style="width:100%" rows="12"></textarea></div>
+                <div>
+                  <button id="tesaMultipleProductSearchClearButton" onclick="clearMultipleSearchResults()">Search Clear</button>
+                  <button id="tesaMultipleProductSearchButton">Search</button>
+                </div>
+              </div>
+              <div class="modal-body" id="tesaMultipleProductSearchResultContainer"></div>
+            </div><!-- /.modal-content -->
+          </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+
         <div id="tesaProductAddToCartDialog" class="modal fade">
           <div class="modal-dialog">
             <div class="modal-content">
@@ -175,29 +192,48 @@
           </div>
         </script>
 
-        <script id="tesaProductSearchResultTemplate" type="text/x-handlebars-template">
-          <table class="table table-condensed table-hover">
-            <tr>
-              <th style="text-align:right;">#</th>
-              <th>ID</th>
-              <th>Name</th>
-              <th>Brand</th>
-              <th style="text-align:right;">Price</th>
-              <th style="text-align:right;">CHS</th>
-              <th style="text-align:right;">EXP</th>
-              <th style="text-align:right;">MIN</th>
-              <th style="text-align:right;">SNP</th>
-              <th style="text-align:right;">HND</th>
-              <th style="text-align:right;">INC</th>
-              <th style="text-align:right;">FUT</th>
-              <th style="text-align:right;">@A</th>
-              <th style="text-align:right;">@B</th>
-              <th style="text-align:right;">@C</th>
-              <th style="text-align:right;"></th>
+        <script id="tesaProductSearchResultTableTemplate" type="text/x-handlebars-template">
+          <table class="table table-condensed table-hover table-bordered tesaProductSearchResultTable">
+            <thead>
+              <tr>
+                <th style="text-align:right;">#</th>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Brand</th>
+                <th style="text-align:right;">Price</th>
+                <th style="text-align:right;">CHS</th>
+                <th style="text-align:right;">EXP</th>
+                <th style="text-align:right;">MIN</th>
+                <th style="text-align:right;">SNP</th>
+                <th style="text-align:right;">HND</th>
+                <th style="text-align:right;">INC</th>
+                <th style="text-align:right;">FUT</th>
+                <th style="text-align:right;">@A</th>
+                <th style="text-align:right;">@B</th>
+                <th style="text-align:right;">@C</th>
+                <th style="text-align:right;"></th>
+              </tr>
+            </thead>
+          </table>
+        </script>
+
+        <script id="tesaProductSearchResultBodyTemplate" type="text/x-handlebars-template">
+          <thead>
+            <tr class="bg-primary">
+              <td colspan="16"  class="tesaProductSearchResultsHeader-{{searchcodehash}}">
+                <div class="pull-right tesa-loading"><i class="fa fa-spinner fa-spin"></i></div>
+                <h4>{{searchcode}}</h4>
+              </td>
             </tr>
-            {{#each items}}
-            <tr id="product-{{id}}">
-              <td style="text-align:right;" nowrap="nowrap">{{add1 @index}} <a href="javascript:tesaDisplayOEMS({{id}})"><i class="glyphicon glyphicon-chevron-right"></i></a></td>
+          </thead>
+          <tbody class="tesaProductSearchResults-{{searchcodehash}}">
+          </tbody>
+        </script>
+
+        <script id="tesaProductSearchResultTemplate" type="text/x-handlebars-template">
+          {{#each items}}
+          <tr id="product-{{id}}">
+            <td style="text-align:right;" nowrap="nowrap">{{add1 @index}} <a href="javascript:tesaDisplayOEMS({{id}})"><i class="glyphicon glyphicon-chevron-right"></i></a></td>
               <td>{{default_code}}</td>
               <td><a href="/web?#id={{id}}&amp;view_type=form&amp;model=product.product&amp;action=135" target="_blank">{{name}}</a></td>
               <td>{{lookup brand 1}}</td>
@@ -206,16 +242,15 @@
               <td style="text-align:right;">{{formatCurrency export_sales_price}}</td>
               <td style="text-align:right;">{{formatCurrency minimum_sales_price}}</td>
               <td style="text-align:right;">{{formatCurrency special_sales_price}}</td>
-              <td style="text-align:right;">{{qty_available}}</td>
+              <td style="text-align:right;" class="{{# if qty_available }}bg-success{{else}}bg-danger{{/if}}">{{qty_available}}</td>
               <td style="text-align:right;">{{incoming_qty}}</td>
               <td style="text-align:right;">{{virtual_available}}</td>
               <td style="text-align:right;">{{stock_A_real}}</td>
               <td style="text-align:right;">{{stock_B_real}}</td>
               <td style="text-align:right;">{{stock_C_real}}</td>
               <td style="text-align:right;"><a href="javascript:addToCartDialog({{id}})"><i class="glyphicon glyphicon-shopping-cart"></i></a></td>
-            </tr>
-            {{/each}}
-          </table>
+          </tr>
+          {{/each}}
         </script>
 
         <script id="tesaProductSearchResultRowTemplate" type="text/x-handlebars-template">
@@ -230,7 +265,7 @@
             <td style="text-align:right;">{{formatCurrency export_sales_price}}</td>
             <td style="text-align:right;">{{formatCurrency minimum_sales_price}}</td>
             <td style="text-align:right;">{{formatCurrency special_sales_price}}</td>
-            <td style="text-align:right;">{{qty_available}}</td>
+            <td style="text-align:right;" class="{{# if qty_available }}bg-success{{else}}bg-danger{{/if}}">{{qty_available}}</td>
             <td style="text-align:right;">{{incoming_qty}}</td>
             <td style="text-align:right;">{{virtual_available}}</td>
             <td style="text-align:right;">{{stock_A_real}}</td>
