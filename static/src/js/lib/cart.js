@@ -80,3 +80,50 @@ function createNewSalesOrder () {
         })
     })
 }
+
+function createNewPurchaseOrder () {
+    var allVals = [];
+    $('input[class=tesa-cart-item]:checked').each(function() {
+        allVals.push(JSON.parse($(this).val()));
+    });
+
+    if (allVals.length == 0) {
+        alert("No products chosen.");
+        return;
+    }
+
+    var Purchase = new openerp.Model("purchase.order");
+    Purchase.call("create", [{
+        partner_id: 1,
+        location_id: 1,
+        pricelist_id: 1,
+    }], {}).then(function (purchaseOrderId) {
+        if (!purchaseOrderId) {
+            alert("Can not create. Contact administrator.");
+            return;
+        }
+        var order_lines = [];
+        allVals.forEach(function (line) {
+            order_lines.push([0, false, {
+                delay: 0,
+                name: line.name,
+                product_id: line.id,
+                price_unit: line.price,
+                product_uom_qty: line.qty,
+                date_planned: new Date().toISOString(),
+            }]);
+        });
+        Purchase.call("write", [[purchaseOrderId], {order_line: order_lines}], {}).then(function () {
+            Purchase.query(["id", "name"])
+                .filter([["id", "=", purchaseOrderId]])
+                .all()
+                .then(function (data) {
+                    alert("Purchase order created: " + data[0].name);
+                    allVals.forEach(function (x) {
+                        removeItemFromCart(x.uid);
+                    });
+                    $("#tesaShowCartDialog").modal("toggle");
+                })
+        })
+    })
+}
