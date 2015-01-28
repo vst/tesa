@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+    <record model="ir.actions.client" id="search">
+      <field name="name">Search</field>
+      <field name="tag">search.action</field>
+    </record>
+  </data>
+</openerp>

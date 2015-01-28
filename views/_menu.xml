@@ -9,6 +9,9 @@
               sequence="2" />
 
 
+    <!-- MENU ITEMS: SEARCH -->
+    <menuitem action="search" id="menu_client_search"/>
+
     <!-- MENU ITEMS: FLOWCHART -->
     <menuitem action="flowchart" id="menu_client_flowchart"/>
 
