@@ -10,8 +10,12 @@ openerp.tesa = function (instance) {
     $("#tesaMultipleProductSearchButton").click(searchMultipleProduct);
 
     // Add the flow chart action:
-    instance.web.client_actions.add("flowchart.action", "instance.tesa.action");
-    instance.tesa.action = instance.web.Widget.extend({template: "flowchart.action"});
+    instance.web.client_actions.add("flowchart.action", "instance.tesa.action_flowchart");
+    instance.tesa.action_flowchart = instance.web.Widget.extend({template: "flowchart.action"});
+
+    // Add the search action:
+    instance.web.client_actions.add("search.action", "instance.tesa.action_search");
+    instance.tesa.action_search = instance.web.Widget.extend({template: "search.action"});
 
     // Add new menu items:
     $(".oe_application_menu_placeholder").append(

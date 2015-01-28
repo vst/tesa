@@ -1,10 +1,10 @@
 {
     "name": "tesa",
-    "version": "0.0.9",
+    "version": "0.0.10",
     "author": "Telosoft",
     "category": "Tools",
     "website": "http://www.telosoft.com",
-    "description": """Provides an ERP Implementation and Customization Addon (Version 0.0.9)""",
+    "description": """Provides an ERP Implementation and Customization Addon (Version 0.0.10)""",
     "depends": [
         "base",
         "account_accountant",
@@ -31,11 +31,13 @@
         "views/sale.xml",
         "views/purchase.xml",
         "views/flowchart.xml",
+        "views/search.xml",
         "views/_menu.xml",
     ],
     "qweb" : [
         "static/src/xml/base.xml",
         "static/src/xml/flowchart.xml",
+        "static/src/xml/search.xml",
     ],
     "installable": True,
     "auto_install": False,

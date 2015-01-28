@@ -1,0 +1,151 @@
+<templates>
+  <div t-name="search.action"> <!-- START TEMPLATE -->
+    <div class="page"> <!-- START PAGE -->
+      <div class="oe_structure"/>
+      <div> <!-- START PADDING -->
+        <div class="row"> <!-- START SEARCH BAR -->
+          <div class="col-xs-12 clearfix"> <!-- START SEARCH BAR COLUMN -->
+            <div class="bg-info" style="padding: 10px;">
+              <button id="tesaSAProductSearchButton" onclick="tesaSAProductSearchAction();" style="float: right;">Search</button>
+              <span style="float: right;">
+                <label for="tesaSAProductSearchTypeLike">Contains</label>
+                <input id="tesaSAProductSearchTypeLike" type="radio" name="tesaSAProductSearchType" value="like" checked="checked" />
+                <label for="tesaSAProductSearchTypeExact">Exact</label>
+                <input id="tesaSAProductSearchTypeExact" type="radio" name="tesaSAProductSearchType" value="exact" />
+              </span>
+              <span style="float:right;">
+                <a href="javascript:toggleSAMode();"><i class="glyphicon glyphicon-list"></i></a>
+              </span>
+              <label for="tesaSAProductSearchKeyword" style="float: left;">Product Code:</label>
+              <span style="overflow: hidden; display: block; padding: 0 4px 0 10px;">
+                <input type="text"
+                       id="tesaSAProductSearchKeyword"
+                       style="width:100%"
+                       rows="1"
+                       onkeydown="if (event.keyCode == 13) {document.getElementById('tesaSAProductSearchButton').click();}"/>
+                <textarea id="tesaSAProductSearchKeywordML"
+                          style="width:100%;display:none;"
+                          rows="10"></textarea>
+              </span>
+            </div>
+          </div>
+        </div> <!-- END SEARCH BAR -->
+
+        <div class="row"> <!-- START SEARCH RESULTS -->
+          <div id="tesaSAProductSearchResult" class="col-xs-12">
+            <table id="tesaSAProductSearchResultTable" class="table table-condensed table-hover table-bordered">
+              <thead>
+                <tr>
+                  <th style="text-align:right;">#</th>
+                  <th>ID</th>
+                  <th>Name</th>
+                  <th>Brand</th>
+                  <th style="text-align:right;">Price</th>
+                  <th style="text-align:right;">CSH</th>
+                  <th style="text-align:right;">EXP</th>
+                  <th style="text-align:right;">MIN</th>
+                  <th style="text-align:right;">SNP</th>
+                  <th style="text-align:right;">HND</th>
+                  <th style="text-align:right;">INC</th>
+                  <th style="text-align:right;">FUT</th>
+                  <th style="text-align:right;">@A</th>
+                  <th style="text-align:right;">@B</th>
+                  <th style="text-align:right;">@C</th>
+                  <th style="text-align:right;"></th>
+                </tr>
+              </thead>
+            </table>
+          </div>
+        </div> <!-- END SEARCH RESULTS -->
+      </div> <!-- END PADDING -->
+    </div> <!-- END PAGE -->
+
+    <!-- BEGIN TEMPLATES -->
+    <script id="tesaSAProductSearchResultBodyTemplate" type="text/x-handlebars-template">
+      <thead class="tesaSAProductSearchResultThead">
+        <tr class="bg-primary">
+          <td colspan="16"  class="tesaSAProductSearchResultsHeader-{{hashid}}">
+            <h4>{{keyword}}</h4>
+          </td>
+        </tr>
+      </thead>
+      <tbody class="tesaSAProductSearchResultTbody tesaSAProductSearchResults-{{hashid}}">
+        {{#each items}}
+        <tr class="tesaSAProductSearchResultRow-{{id}}">
+          <td style="text-align:right;" nowrap="nowrap">{{add1 @index}} <a href="javascript:tesaSADisplayOEMS({{id}})"><i class="glyphicon glyphicon-chevron-right"></i></a></td>
+          <td>{{default_code}}</td>
+          <td><a href="/web?#id={{id}}&amp;view_type=form&amp;model=product.product&amp;action=135" target="_blank">{{name}}</a></td>
+          <td>{{lookup brand 1}}</td>
+          <td style="text-align:right;">{{formatCurrency lst_price}}</td>
+          <td style="text-align:right;">{{formatCurrency minimum_cash_sales_price}}</td>
+          <td style="text-align:right;">{{formatCurrency export_sales_price}}</td>
+          <td style="text-align:right;">{{formatCurrency minimum_sales_price}}</td>
+          <td style="text-align:right;">{{formatCurrency special_sales_price}}</td>
+          <td style="text-align:right;" class="{{# if qty_available }}bg-success{{else}}bg-danger{{/if}}">{{qty_available}}</td>
+          <td style="text-align:right;">{{incoming_qty}}</td>
+          <td style="text-align:right;">{{virtual_available}}</td>
+          <td style="text-align:right;">{{stock_A_real}}</td>
+          <td style="text-align:right;">{{stock_B_real}}</td>
+          <td style="text-align:right;">{{stock_C_real}}</td>
+          <td style="text-align:right;"><a href="javascript:addToCartDialog({{id}})"><i class="glyphicon glyphicon-shopping-cart"></i></a></td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </script>
+
+    <script id="tesaSAProductSearchResultRowTemplate" type="text/x-handlebars-template">
+      {{#each items}}
+      <tr class="tesaSAProductSearchResultRow-{{id}}">
+        <td style="text-align:right;" nowrap="nowrap">{{add1 @index}} <a href="javascript:tesaSADisplayOEMS({{id}})"><i class="glyphicon glyphicon-chevron-right"></i></a></td>
+        <td>{{default_code}}</td>
+        <td><a href="/web?#id={{id}}&amp;view_type=form&amp;model=product.product&amp;action=135" target="_blank">{{name}}</a></td>
+        <td>{{lookup brand 1}}</td>
+        <td style="text-align:right;">{{formatCurrency lst_price}}</td>
+        <td style="text-align:right;">{{formatCurrency minimum_cash_sales_price}}</td>
+        <td style="text-align:right;">{{formatCurrency export_sales_price}}</td>
+        <td style="text-align:right;">{{formatCurrency minimum_sales_price}}</td>
+        <td style="text-align:right;">{{formatCurrency special_sales_price}}</td>
+        <td style="text-align:right;" class="{{# if qty_available }}bg-success{{else}}bg-danger{{/if}}">{{qty_available}}</td>
+        <td style="text-align:right;">{{incoming_qty}}</td>
+        <td style="text-align:right;">{{virtual_available}}</td>
+        <td style="text-align:right;">{{stock_A_real}}</td>
+        <td style="text-align:right;">{{stock_B_real}}</td>
+        <td style="text-align:right;">{{stock_C_real}}</td>
+        <td style="text-align:right;"><a href="javascript:addToCartDialog({{id}})"><i class="glyphicon glyphicon-shopping-cart"></i></a></td>
+      </tr>
+      {{/each}}
+    </script>
+
+    <script id="tesaSAOEMProductSearchResultRowTemplate" type="text/x-handlebars-template">
+      {{#each items}}
+      <tr class="tesaSAOEMProductSearchResultRow-{{id}} bg-warning product-oem-for-{{../id}}" style="border-right:2px solid black;border-left:2px solid black;{{#if @last}}border-bottom:2px solid black;{{/if}}">
+        <td style="text-align:right;" nowrap="nowrap"><i class="glyphicon glyphicon-list"></i></td>
+        <td>{{default_code}}</td>
+        <td><a href="/web?#id={{id}}&amp;view_type=form&amp;model=product.product&amp;action=135" target="_blank">{{name}}</a></td>
+        <td>{{lookup brand 1}}</td>
+        <td style="text-align:right;">{{formatCurrency lst_price}}</td>
+        <td style="text-align:right;">{{formatCurrency minimum_cash_sales_price}}</td>
+        <td style="text-align:right;">{{formatCurrency export_sales_price}}</td>
+        <td style="text-align:right;">{{formatCurrency minimum_sales_price}}</td>
+        <td style="text-align:right;">{{formatCurrency special_sales_price}}</td>
+        <td style="text-align:right;" class="{{# if qty_available }}bg-success{{else}}bg-danger{{/if}}">{{qty_available}}</td>
+        <td style="text-align:right;">{{incoming_qty}}</td>
+        <td style="text-align:right;">{{virtual_available}}</td>
+        <td style="text-align:right;">{{stock_A_real}}</td>
+        <td style="text-align:right;">{{stock_B_real}}</td>
+        <td style="text-align:right;">{{stock_C_real}}</td>
+        <td style="text-align:right;"><a href="javascript:addToCartDialog({{id}})"><i class="glyphicon glyphicon-shopping-cart"></i></a></td>
+      </tr>
+      {{/each}}
+    </script>
+
+    <script id="tesaSAOEMProductSearchResultEmptyRowTemplate" type="text/x-handlebars-template">
+      <tr class="bg-danger product-oem-for-{{id}}" style="border-right:2px solid black;border-left:2px solid black;border-bottom:2px solid black;">
+        <td style="text-align:right;" nowrap="nowrap"><i class="glyphicon glyphicon-exclamation-sign"></i></td>
+        <td colspan="15">No OEM.</td>
+      </tr>
+    </script>
+
+    <!-- END TEMPLATES -->
+  </div> <!-- END TEMPLATE -->
+</templates>

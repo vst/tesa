@@ -13,6 +13,7 @@
         <script type="text/javascript" src="/tesa/static/src/js/lib/handlebar_helpers.js"></script>
         <script type="text/javascript" src="/tesa/static/src/js/lib/cart.js"></script>
         <script type="text/javascript" src="/tesa/static/src/js/lib/search.js"></script>
+        <script type="text/javascript" src="/tesa/static/src/js/lib/sa.js"></script>
         <script type="text/javascript" src="/tesa/static/src/js/lib/multiplesearch.js"></script>
         <script type="text/javascript" src="/tesa/static/src/js/tesa.js"></script>
       </xpath>
@@ -146,7 +147,8 @@
               </table>
             </div>
             <div class="col-md-4">
-              <a href="javascript:createNewSalesOrder()" class="btn btn-primary btn-sm">Create New Sales Quotation</a>
+              <div style="margin-bottom:10px;"><a href="javascript:createNewSalesOrder()" class="btn btn-primary btn-sm">Create New Sales Quotation</a></div>
+              <div><a href="javascript:createNewPurchaseOrder()" class="btn btn-danger btn-sm">Create New Purchase Quotation</a></div>
             </div>
           </div>
         </script>
