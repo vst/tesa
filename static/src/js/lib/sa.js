@@ -13,6 +13,7 @@ var SAProductSearchFields = [
     "special_sales_price",
     "qty_available",
     "incoming_qty",
+    "outgoing_qty",
     "virtual_available",
     "stock_A_real",
     "stock_B_real",
@@ -125,6 +126,124 @@ function renderResults (term, items) {
 function toggleSAMode() {
     $("#tesaSAProductSearchKeyword").toggle();
     $("#tesaSAProductSearchKeywordML").toggle();
+}
+
+function actionSACartDialog (id) {
+    // Get OEMs:
+    SAProduct.query(SAProductSearchFields)
+        .filter([["id", "=", id]])
+        .all().then(function (items) {
+            // Check items:
+            if (items.length == 0) {
+                alert("No product found.");
+                return;
+            }
+
+            // Get item:
+            var item = items[0]
+
+            var source   = $("#tesaSAProductCartDialogTemplate").html();
+            var template = Handlebars.compile(source);
+            var html = template(item);
+
+            $("#tesaSAProductCartDialogContainer").html(html);
+            $("#tesaSAProductCartDialog").modal("toggle");
+        });
+}
+
+function addToExistingSO () {
+    var name = $("#tesaSAProductCartName").val().trim();
+    var id = parseInt($("#tesaSAProductCartId").val().trim());
+    var price = parseFloat($("#tesaSAProductCartPrice").val().trim() || 1);
+    var quantity = parseInt($("#tesaSAProductCartQuantity").val().trim() || 1);
+    var so = $("#tesaSAProductCartOrderName").val().trim()
+    var SalesOrder = new openerp.Model("sale.order");
+    SalesOrder.query(["id", "state"])
+        .filter([["name", "=", so]])
+        .limit(1)
+        .all()
+        .then(function (items) {
+            if (items.length == 0) {
+                alert("Cannot find the Sales Order with ID: " + so);
+                return;
+            }
+            else if (items[0].state != "draft"){
+                alert("Cannot add item to orders which are not in draft state");
+                return;
+            }
+            var SalesOrderLine = new openerp.Model("sale.order.line");
+            SalesOrderLine.call("create", [{
+                order_id: items[0].id,
+                delay: 0,
+                name: name,
+                product_id: id,
+                price_unit: price,
+                product_uom_qty: quantity
+            }], {})
+                .then(function (saleOrderLineId) {
+                    if (!saleOrderLineId) {
+                        alert("Can not create. Contact administrator.");
+                        return;
+                    }
+                    else {
+                        alert("Added.");
+                    }
+                })
+                .fail(function () {
+                    alert("Error during sales order line create.");
+                });
+        })
+        .fail(function () {
+            console.error("Error during sales order search");
+        });
+}
+
+function addToExistingPO () {
+    var name = $("#tesaSAProductCartName").val().trim();
+    var id = parseInt($("#tesaSAProductCartId").val().trim());
+    var price = parseFloat($("#tesaSAProductCartPrice").val().trim() || 1);
+    var quantity = parseInt($("#tesaSAProductCartQuantity").val().trim() || 1);
+    var po = $("#tesaSAProductCartOrderName").val().trim()
+    var PurchaseOrder = new openerp.Model("purchase.order");
+    PurchaseOrder.query(["id", "state"])
+        .filter([["name", "=", po]])
+        .limit(1)
+        .all()
+        .then(function (items) {
+            if (items.length == 0) {
+                alert("Cannot find the Purchase Order with ID: " + so);
+                return;
+            }
+            else if (items[0].state != "draft"){
+                alert("Cannot add item to orders which are not in draft state");
+                return;
+            }
+            var PurchaseOrderLine = new openerp.Model("purchase.order.line");
+            PurchaseOrderLine.call("create", [{
+                order_id: items[0].id,
+                delay: 0,
+                name: name,
+                product_id: id,
+                price_unit: price,
+                product_qty: quantity,
+                date_planned: new Date().toISOString(),
+            }], {})
+                .then(function (purchaseOrderLineId) {
+                    if (!purchaseOrderLineId) {
+                        alert("Can not create. Contact administrator.");
+                        return;
+                    }
+                    else {
+                        alert("Added.");
+                    }
+                })
+                .fail(function () {
+                    alert("Error during purchase order line create.");
+                });
+        })
+        .fail(function () {
+            console.error("Error during purchase order search");
+        });
 }
 
 function tesaSAProductSearchAction () {
