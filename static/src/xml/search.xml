@@ -61,7 +61,64 @@
       </div> <!-- END PADDING -->
     </div> <!-- END PAGE -->
 
+
+    <div id="tesaSAShowCartDialog" class="modal fade">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4>Existing Items in the Cart</h4>
+          </div>
+          <div class="modal-body" id="tesaSAShowCartContainer"></div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+
+    <div id="tesaSAProductCartDialog" class="modal fade">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-body" id="tesaSAProductCartDialogContainer"></div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+
     <!-- BEGIN TEMPLATES -->
+    <script id="tesaSACartTemplate" type="text/x-handlebars-template">
+      <div class="row">
+        <div class="col-md-8">
+          <table class="table table-condensed table-bordered">
+            <tr>
+              <th>Code</th>
+              <th>Name</th>
+              <th style="text-align:right;">Price</th>
+              <th style="text-align:right;">Quantity</th>
+              <th style="text-align:center;">Location</th>
+              <th style="text-align:center;">For</th>
+              <th style="text-align:center;">Tag</th>
+              <th></th>
+            </tr>
+            {{#each .}}
+            <tr>
+              <td>{{code}}</td>
+              <td>{{name}}</td>
+              <td style="text-align:right;">{{price}}</td>
+              <td style="text-align:right;">{{quantity}}</td>
+              <td style="text-align:center;">{{location}}</td>
+              <td style="text-align:center;">{{cfor}}</td>
+              <td style="text-align:center;">{{tag}}</td>
+              <td><input type="checkbox" class="tesa-cart-item" value="{{cartsel .}}" name="{{hashid}}"/></td>
+            </tr>
+            {{/each}}
+          </table>
+        </div>
+        <div class="col-md-4">
+          <div style="margin-bottom:10px;"><a href="javascript:createNewSalesOrder()" class="btn btn-primary btn-sm">Create New Sales Quotation</a></div>
+          <div><a href="javascript:createNewPurchaseOrder()" class="btn btn-danger btn-sm">Create New Purchase Quotation</a></div>
+        </div>
+      </div>
+    </script>
+
     <script id="tesaSAProductSearchResultBodyTemplate" type="text/x-handlebars-template">
       <thead class="tesaSAProductSearchResultThead">
         <tr class="bg-primary">
@@ -119,14 +176,6 @@
       {{/each}}
     </script>
 
-    <div id="tesaSAProductCartDialog" class="modal fade">
-      <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-          <div class="modal-body" id="tesaSAProductCartDialogContainer"></div>
-        </div><!-- /.modal-content -->
-      </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
-
     <script id="tesaSAProductCartDialogTemplate" type="text/x-handlebars-template">
       <div class="row lead">
         <div class="col-md-3">{{default_code}}</div>
@@ -141,23 +190,23 @@
             <table class="table">
               <tr>
                 <td>List Price</td>
-                <td style="text-align:right;"><a href="javascript:addPriceForCart({{lst_price}});">{{formatCurrency lst_price}}</a></td>
+                <td style="text-align:right;"><a href="javascript:actionSACopyPrice({{lst_price}});">{{formatCurrency lst_price}}</a></td>
               </tr>
               <tr>
                 <td>Cash Sales</td>
-                <td style="text-align:right;"><a href="javascript:addPriceForCart({{minimum_cash_sales_price}});">{{formatCurrency minimum_cash_sales_price}}</a></td>
+                <td style="text-align:right;"><a href="javascript:actionSACopyPrice({{minimum_cash_sales_price}});">{{formatCurrency minimum_cash_sales_price}}</a></td>
               </tr>
               <tr>
                 <td>Export Sales</td>
-                <td style="text-align:right;"><a href="javascript:addPriceForCart({{export_sales_price}});">{{formatCurrency export_sales_price}}</a></td>
+                <td style="text-align:right;"><a href="javascript:actionSACopyPrice({{export_sales_price}});">{{formatCurrency export_sales_price}}</a></td>
               </tr>
               <tr>
                 <td>Minimum Sales</td>
-                <td style="text-align:right;"><a href="javascript:addPriceForCart({{minimum_sales_price}});">{{formatCurrency minimum_sales_price}}</a></td>
+                <td style="text-align:right;"><a href="javascript:actionSACopyPrice({{minimum_sales_price}});">{{formatCurrency minimum_sales_price}}</a></td>
               </tr>
               <tr>
                 <td>Special Sales</td>
-                <td style="text-align:right;"><a href="javascript:addPriceForCart({{special_sales_price}});">{{formatCurrency special_sales_price}}</a></td>
+                <td style="text-align:right;"><a href="javascript:actionSACopyPrice({{special_sales_price}});">{{formatCurrency special_sales_price}}</a></td>
               </tr>
             </table>
           </div>
@@ -167,27 +216,26 @@
             <table class="table">
               <tr>
                 <td>Manual Price</td>
-                <td style="text-align:right;"><a href="javascript:addPriceForCart({{manual_cost_price}});">{{formatCurrency manual_cost_price}}</a></td>
+                <td style="text-align:right;"><a href="javascript:actionSACopyPrice({{manual_cost_price}});">{{formatCurrency manual_cost_price}}</a></td>
               </tr>
               <tr>
                 <td>Cost Price</td>
-                <td style="text-align:right;"><a href="javascript:addPriceForCart({{standard_price}});">{{formatCurrency standard_price}}</a></td>
+                <td style="text-align:right;"><a href="javascript:actionSACopyPrice({{standard_price}});">{{formatCurrency standard_price}}</a></td>
               </tr>
               <tr>
                 <td>ETK Cost Price</td>
-                <td style="text-align:right;"><a href="javascript:addPriceForCart({{etk_cost_price}});">{{formatCurrency etk_cost_price}}</a></td>
+                <td style="text-align:right;"><a href="javascript:actionSACopyPrice({{etk_cost_price}});">{{formatCurrency etk_cost_price}}</a></td>
               </tr>
               <tr>
                 <td>Prev. Local Deal</td>
-                <td style="text-align:right;"><a href="javascript:addPriceForCart({{previous_local_deal_cost_price}});">{{formatCurrency previous_local_deal_cost_price}}</a></td>
+                <td style="text-align:right;"><a href="javascript:actionSACopyPrice({{previous_local_deal_cost_price}});">{{formatCurrency previous_local_deal_cost_price}}</a></td>
               </tr>
               <tr>
                 <td>Curr. Local Deal</td>
-                <td style="text-align:right;"><a href="javascript:addPriceForCart({{current_local_deal_cost_price}});">{{formatCurrency current_local_deal_cost_price}}</a></td>
+                <td style="text-align:right;"><a href="javascript:actionSACopyPrice({{current_local_deal_cost_price}});">{{formatCurrency current_local_deal_cost_price}}</a></td>
               </tr>
             </table>
           </div>
-
         </div>
 
         <div class="col-md-4">
@@ -213,7 +261,7 @@
             <label for="tesaSAProductCartPrice" style="width:65px;">Price</label>
             <input id="tesaSAProductCartPrice"  style="width:160px;" />
             <label for="tesaSAProductCartQuantity" style="width:65px;">Quantity</label>
-            <input id="tesaSAProductCartQuantity"  style="width:160px;" />
+            <input id="tesaSAProductCartQuantity"  style="width:160px;" value="1" />
           </div>
 
           <div class="well">
@@ -231,7 +279,7 @@
             <input type="radio" name="tesaSAProductCartFor" id="tesaSAProductCartForSales" value="Sales" checked="checked" />
             <label for="tesaSAProductCartForPurchases">Purchases</label>
             <input type="radio" name="tesaSAProductCartFor" id="tesaSAProductCartForPurchases" value="Purchases" />
-            <a href="javascript:addToCart({{id}})" class="btn btn-default btn-block" style="margin-top:10px;">Add to Cart</a>
+            <a href="javascript:actionSACartIt()" class="btn btn-default btn-block" style="margin-top:10px;">Add to Cart</a>
           </div>
 
           <div class="well">
@@ -253,8 +301,6 @@
         <td colspan="16">No OEM.</td>
       </tr>
     </script>
-
-
 
     <!-- END TEMPLATES -->
   </div> <!-- END TEMPLATE -->

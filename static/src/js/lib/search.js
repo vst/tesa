@@ -65,62 +65,6 @@ function tesaDisplayOEMS (id) {
         });
 }
 
-function addPriceForCart (price) {
-    $("#tesaProductAddToCartPrice").val(price);
-}
-
-function addToCartDialog(id) {
-    // Get the product class:
-    var Product = new openerp.Model("product.product");
-
-    // Fields:
-    var fields = [
-        "default_code",
-        "name",
-        "brand",
-        "lst_price",
-        "minimum_cash_sales_price",
-        "export_sales_price",
-        "minimum_sales_price",
-        "special_sales_price",
-        "qty_available",
-        "incoming_qty",
-        "virtual_available",
-        "stock_A_real",
-        "stock_B_real",
-        "stock_C_real"]
-
-    // Get OEMs:
-    Product.query(fields)
-        .filter([["id", "=", id]])
-        .all().then(function (items) {
-            if (items.length == 0) {
-                alert("No product found.");
-                return;
-            }
-            var source   = $("#tesaProductAddToCartTemplate").html();
-            var template = Handlebars.compile(source);
-            var html = template(items[0]);
-
-            $("#tesaProductAddToCartContainer").html(html);
-            $("#tesaProductAddToCartDialog").modal("toggle");
-        });
-}
-
-function addToCart (id) {
-    addItemToCart({
-        id: id,
-        name: $("#tesaProductAddToCartName").val(),
-        code: $("#tesaProductAddToCartCode").val(),
-        qty: $("#tesaProductAddToCartQuantity").val(),
-        price: $("#tesaProductAddToCartPrice").val(),
-        tag: $("#tesaProductAddToCartTag").val(),
-        uid: "" + Math.random(),
-    });
-    $("#tesaProductAddToCartContainer").html("");
-    $("#tesaProductAddToCartDialog").modal("toggle");
-}
-
 function showProductSearch () {
     $("#tesaProductSearchDialog").modal("toggle").on('shown.bs.modal', function () {
         $("#teseProductSearchKeyword").focus();

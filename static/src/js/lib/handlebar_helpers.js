@@ -6,14 +6,8 @@ Handlebars.registerHelper("add1", function(value) {
     return value + 1;
 });
 
-Handlebars.registerHelper("cartsel", function(id, price, qty, xname, uid) {
-    return JSON.stringify({
-        id: id,
-        price: price,
-        qty: qty,
-        name: xname,
-        uid: uid,
-    });
+Handlebars.registerHelper("cartsel", function(obj) {
+    return JSON.stringify(obj);
 });
 
 Handlebars.registerHelper("cartselname", function(id, price, qty) {

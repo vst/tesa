@@ -1,3 +1,52 @@
+// Define cart identifier:
+var IDENTIFIER_CART = "tesa:cart";
+
+// Define the CartItem object:
+function CartItem (id,
+                   code,
+                   name,
+                   price,
+                   quantity,
+                   tag,
+                   location,
+                   cfor) {
+    this.id = id;
+    this.code = code;
+    this.name = name;
+    this.price = price;
+    this.quantity = quantity;
+    this.tag = tag;
+    this.location = location;
+    this.cfor = cfor;
+    this.hashid = (this.id + "-" + this.code + "-" + this.name + "-" + this.price + "-" + this.quantity + "-" + this.tag + "-" + this.location + "-" + this.cfor).hashCode();
+    this.createdAt = new Date().getTime();
+}
+
+function clearCart () {
+    window.localStorage.setItem(IDENTIFIER_CART, JSON.stringify({}));
+}
+
+function getCart () {
+    var cart = window.localStorage.getItem(IDENTIFIER_CART);
+    if (cart == null) {
+        clearCart();
+    }
+    return JSON.parse(window.localStorage.getItem(IDENTIFIER_CART));
+}
+
+function addToCart (item) {
+    var items = getCart();
+    items[item.hashid] = item;
+    window.localStorage.setItem(IDENTIFIER_CART, JSON.stringify(items));
+}
+
+function removeFromCart (hashid) {
+    var items = getCart();
+    delete items[hashid];
+    window.localStorage.setItem(IDENTIFIER_CART, JSON.stringify(items));
+    return getCart();
+}
+
 // Get the product class:
 var SAProduct = new openerp.Model("product.product");
 
@@ -11,6 +60,11 @@ var SAProductSearchFields = [
     "export_sales_price",
     "minimum_sales_price",
     "special_sales_price",
+    "manual_cost_price",
+    "standard_price",
+    "etk_cost_price",
+    "previous_local_deal_cost_price",
+    "current_local_deal_cost_price",
     "qty_available",
     "incoming_qty",
     "outgoing_qty",
@@ -151,6 +205,22 @@ function actionSACartDialog (id) {
         });
 }
 
+function actionSACartIt (id) {
+    // Get data:
+    var name = $("#tesaSAProductCartName").val().trim();
+    var code = $("#tesaSAProductCartCode").val().trim();
+    var id = parseInt($("#tesaSAProductCartId").val().trim());
+    var price = parseFloat($("#tesaSAProductCartPrice").val().trim() || 1);
+    var quantity = parseInt($("#tesaSAProductCartQuantity").val().trim() || 1);
+    var tag = $("#tesaSAProductCartTag").val().trim() || "None"
+    var location = $("input[name=tesaSAProductCartLocation]:checked").val().trim();
+    var cfor = $("input[name=tesaSAProductCartFor]:checked").val().trim();
+
+    // Prepare the cart item:
+    var item = new CartItem (id, code, name, price, quantity, tag, location, cfor);
+    addToCart(item);
+}
+
 function addToExistingSO () {
     var name = $("#tesaSAProductCartName").val().trim();
     var id = parseInt($("#tesaSAProductCartId").val().trim());
@@ -211,7 +281,7 @@ function addToExistingPO () {
         .all()
         .then(function (items) {
             if (items.length == 0) {
-                alert("Cannot find the Purchase Order with ID: " + so);
+                alert("Cannot find the Purchase Order with ID: " + po);
                 return;
             }
             else if (items[0].state != "draft"){
@@ -244,6 +314,18 @@ function addToExistingPO () {
         .fail(function () {
             console.error("Error during purchase order search");
         });
+}
+
+function actionSACopyPrice (price) {
+    $("#tesaSAProductCartPrice").val(price);
+}
+
+function actionSAShowCart () {
+    var source   = $("#tesaSACartTemplate").html();
+    var template = Handlebars.compile(source);
+    var html = template(Object.keys(getCart()).map(function (x) {return getCart()[x];}));
+    $("#tesaSAShowCartContainer").html(html);
+    $("#tesaSAShowCartDialog").modal("toggle");
 }
 
 function tesaSAProductSearchAction () {
@@ -295,4 +377,93 @@ function tesaSAProductSearchAction () {
         console.log("Will do an 'exact' search.");
         searchExact(searchTerms, renderResults);
     }
+}
+
+function createNewSalesOrder () {
+    var allVals = [];
+    $('input[class=tesa-cart-item]:checked').each(function() {
+        allVals.push(JSON.parse($(this).val()));
+    });
+
+    if (allVals.length == 0) {
+        alert("No products chosen.");
+        return;
+    }
+
+    var Sale = new openerp.Model("sale.order");
+    Sale.call("create", [{partner_id: 1}], {}).then(function (saleOrderId) {
+        if (!saleOrderId) {
+            alert("Can not create. Contact administrator.");
+            return;
+        }
+        var order_lines = [];
+        allVals.forEach(function (line) {
+            order_lines.push([0, false, {
+                delay: 0,
+                name: line.name,
+                product_id: line.id,
+                price_unit: line.price,
+                product_uom_qty: line.qty
+            }]);
+        });
+        Sale.call("write", [[saleOrderId], {order_line: order_lines}], {}).then(function () {
+            Sale.query(["id", "name"])
+                .filter([["id", "=", saleOrderId]])
+                .all()
+                .then(function (data) {
+                    alert("Sales order created: " + data[0].name);
+                    allVals.forEach(function (x) {
+                        removeItemFromCart(x.hashid);
+                    });
+                    $("#tesaShowCartDialog").modal("toggle");
+                })
+        })
+    })
+}
+
+function createNewPurchaseOrder () {
+    var allVals = [];
+    $('input[class=tesa-cart-item]:checked').each(function() {
+        allVals.push(JSON.parse($(this).val()));
+    });
+
+    if (allVals.length == 0) {
+        alert("No products chosen.");
+        return;
+    }
+
+    var Purchase = new openerp.Model("purchase.order");
+    Purchase.call("create", [{
+        partner_id: 1,
+        location_id: 1,
+        pricelist_id: 1,
+    }], {}).then(function (purchaseOrderId) {
+        if (!purchaseOrderId) {
+            alert("Can not create. Contact administrator.");
+            return;
+        }
+        var order_lines = [];
+        allVals.forEach(function (line) {
+            order_lines.push([0, false, {
+                delay: 0,
+                name: line.name,
+                product_id: line.id,
+                price_unit: line.price,
+                product_uom_qty: line.qty,
+                date_planned: new Date().toISOString(),
+            }]);
+        });
+        Purchase.call("write", [[purchaseOrderId], {order_line: order_lines}], {}).then(function () {
+            Purchase.query(["id", "name"])
+                .filter([["id", "=", purchaseOrderId]])
+                .all()
+                .then(function (data) {
+                    alert("Purchase order created: " + data[0].name);
+                    allVals.forEach(function (x) {
+                        removeItemFromCart(x.hashid);
+                    });
+                    $("#tesaShowCartDialog").modal("toggle");
+                })
+        })
+    })
 }
