@@ -6,6 +6,7 @@
         <div class="row"> <!-- START SEARCH BAR -->
           <div class="col-xs-12 clearfix"> <!-- START SEARCH BAR COLUMN -->
             <div class="bg-info" style="padding: 10px;">
+              <button onclick="actionSAShowCart();" style="float: right;margin-left:2px;">Cart</button>
               <button id="tesaSAProductSearchButton" onclick="tesaSAProductSearchAction();" style="float: right;">Search</button>
               <span style="float: right;">
                 <label for="tesaSAProductSearchTypeLike">Contains</label>
@@ -86,7 +87,7 @@
     <!-- BEGIN TEMPLATES -->
     <script id="tesaSACartTemplate" type="text/x-handlebars-template">
       <div class="row">
-        <div class="col-md-8">
+        <div class="col-md-12">
           <table class="table table-condensed table-bordered">
             <tr>
               <th>Code</th>
@@ -112,9 +113,20 @@
             {{/each}}
           </table>
         </div>
-        <div class="col-md-4">
-          <div style="margin-bottom:10px;"><a href="javascript:createNewSalesOrder()" class="btn btn-primary btn-sm">Create New Sales Quotation</a></div>
-          <div><a href="javascript:createNewPurchaseOrder()" class="btn btn-danger btn-sm">Create New Purchase Quotation</a></div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <label for="tesaSAProductNewOLocationA" style="width:65px;">Location</label>
+          <label for="tesaSAProductNewOLocationA">A</label>
+          <input type="radio" name="tesaSAProductNewOLocation" id="tesaSAProductNewOLocationA" value="A" checked="checked" />
+          <label for="tesaSAProductNewOLocationB">B</label>
+          <input type="radio" name="tesaSAProductNewOLocation" id="tesaSAProductNewOLocationB" value="B" />
+          <label for="tesaSAProductNewOLocationC">C</label>
+          <input type="radio" name="tesaSAProductNewOLocation" id="tesaSAProductNewOLocationC" value="C" />
+          <div class="btn-group">
+            <a href="javascript:actionCreateNewSalesOrder()" class="btn btn-success btn-sm" style="color:white;">Create New SO</a>
+            <a href="javascript:actionCreateNewPurchaseOrder()" class="btn btn-danger btn-sm" style="color:white;">Create New PO</a>
+          </div>
         </div>
       </div>
     </script>

@@ -1,52 +1,3 @@
-// Define cart identifier:
-var IDENTIFIER_CART = "tesa:cart";
-
-// Define the CartItem object:
-function CartItem (id,
-                   code,
-                   name,
-                   price,
-                   quantity,
-                   tag,
-                   location,
-                   cfor) {
-    this.id = id;
-    this.code = code;
-    this.name = name;
-    this.price = price;
-    this.quantity = quantity;
-    this.tag = tag;
-    this.location = location;
-    this.cfor = cfor;
-    this.hashid = (this.id + "-" + this.code + "-" + this.name + "-" + this.price + "-" + this.quantity + "-" + this.tag + "-" + this.location + "-" + this.cfor).hashCode();
-    this.createdAt = new Date().getTime();
-}
-
-function clearCart () {
-    window.localStorage.setItem(IDENTIFIER_CART, JSON.stringify({}));
-}
-
-function getCart () {
-    var cart = window.localStorage.getItem(IDENTIFIER_CART);
-    if (cart == null) {
-        clearCart();
-    }
-    return JSON.parse(window.localStorage.getItem(IDENTIFIER_CART));
-}
-
-function addToCart (item) {
-    var items = getCart();
-    items[item.hashid] = item;
-    window.localStorage.setItem(IDENTIFIER_CART, JSON.stringify(items));
-}
-
-function removeFromCart (hashid) {
-    var items = getCart();
-    delete items[hashid];
-    window.localStorage.setItem(IDENTIFIER_CART, JSON.stringify(items));
-    return getCart();
-}
-
 // Get the product class:
 var SAProduct = new openerp.Model("product.product");
 
@@ -182,45 +133,6 @@ function toggleSAMode() {
     $("#tesaSAProductSearchKeywordML").toggle();
 }
 
-function actionSACartDialog (id) {
-    // Get OEMs:
-    SAProduct.query(SAProductSearchFields)
-        .filter([["id", "=", id]])
-        .all().then(function (items) {
-            // Check items:
-            if (items.length == 0) {
-                alert("No product found.");
-                return;
-            }
-
-            // Get item:
-            var item = items[0]
-
-            var source   = $("#tesaSAProductCartDialogTemplate").html();
-            var template = Handlebars.compile(source);
-            var html = template(item);
-
-            $("#tesaSAProductCartDialogContainer").html(html);
-            $("#tesaSAProductCartDialog").modal("toggle");
-        });
-}
-
-function actionSACartIt (id) {
-    // Get data:
-    var name = $("#tesaSAProductCartName").val().trim();
-    var code = $("#tesaSAProductCartCode").val().trim();
-    var id = parseInt($("#tesaSAProductCartId").val().trim());
-    var price = parseFloat($("#tesaSAProductCartPrice").val().trim() || 1);
-    var quantity = parseInt($("#tesaSAProductCartQuantity").val().trim() || 1);
-    var tag = $("#tesaSAProductCartTag").val().trim() || "None"
-    var location = $("input[name=tesaSAProductCartLocation]:checked").val().trim();
-    var cfor = $("input[name=tesaSAProductCartFor]:checked").val().trim();
-
-    // Prepare the cart item:
-    var item = new CartItem (id, code, name, price, quantity, tag, location, cfor);
-    addToCart(item);
-}
-
 function addToExistingSO () {
     var name = $("#tesaSAProductCartName").val().trim();
     var id = parseInt($("#tesaSAProductCartId").val().trim());
@@ -320,14 +232,6 @@ function actionSACopyPrice (price) {
     $("#tesaSAProductCartPrice").val(price);
 }
 
-function actionSAShowCart () {
-    var source   = $("#tesaSACartTemplate").html();
-    var template = Handlebars.compile(source);
-    var html = template(Object.keys(getCart()).map(function (x) {return getCart()[x];}));
-    $("#tesaSAShowCartContainer").html(html);
-    $("#tesaSAShowCartDialog").modal("toggle");
-}
-
 function tesaSAProductSearchAction () {
     // Get search line:
     var searchLine = ($("#tesaSAProductSearchKeyword").is(":visible")) ? $("#tesaSAProductSearchKeyword").val() : $("#tesaSAProductSearchKeywordML").val();
@@ -379,91 +283,166 @@ function tesaSAProductSearchAction () {
     }
 }
 
-function createNewSalesOrder () {
-    var allVals = [];
-    $('input[class=tesa-cart-item]:checked').each(function() {
-        allVals.push(JSON.parse($(this).val()));
-    });
+function getLocation(code, callback) {
+    var name = "Physical Locations / " + code.trim() + " / Stock";
+    var Location = new openerp.Model("stock.location")
+    Location.query(["id"])
+        .filter([["complete_name", "=", name]])
+        .limit(1)
+        .all()
+        .then(function (items) {
+            if (items.length == 0) {
+                alert("Cannot find location.");
+                return;
+            }
+            callback(items[0].id);
+        })
+        .fail(function () {
+            alert("Cannot find location.");
+            return;
+        })
+}
 
-    if (allVals.length == 0) {
-        alert("No products chosen.");
-        return;
-    }
+function getPickingType(location, callback) {
+    var PickingType = new openerp.Model("stock.picking.type")
+    PickingType.query(["id"])
+        .filter([["default_location_dest_id", "=", location], ["code", "=", "incoming"]])
+        .limit(1)
+        .all()
+        .then(function (items) {
+            if (items.length == 0) {
+                alert("Cannot find location.");
+                return;
+            }
+            callback(items[0].id);
+        })
+        .fail(function () {
+            alert("Cannot find location.");
+            return;
+        })
+}
 
+function getWarehouse(code, callback) {
+    var Warehouse = new openerp.Model("stock.warehouse")
+    Warehouse.query(["id"])
+        .filter([["code", "=", code.trim()]])
+        .limit(1)
+        .all()
+        .then(function (items) {
+            if (items.length == 0) {
+                alert("Cannot find warehouse.");
+                return;
+            }
+            callback(items[0].id);
+        })
+        .fail(function () {
+            alert("Cannot find warehouse.");
+            return;
+        })
+}
+
+function createNewSalesOrder (partner, location, items) {
+    // Get the order object:
     var Sale = new openerp.Model("sale.order");
-    Sale.call("create", [{partner_id: 1}], {}).then(function (saleOrderId) {
-        if (!saleOrderId) {
+
+    // Create:
+    Sale.call("create", [{partner_id: partner, warehouse_id: location}], {}).then(function (orderId) {
+        // Check the ID:
+        if (!orderId) {
             alert("Can not create. Contact administrator.");
             return;
         }
+
+        // Populate order lines:
         var order_lines = [];
-        allVals.forEach(function (line) {
+        items.forEach(function (line) {
             order_lines.push([0, false, {
                 delay: 0,
                 name: line.name,
                 product_id: line.id,
                 price_unit: line.price,
-                product_uom_qty: line.qty
+                product_uom_qty: line.quantity
             }]);
         });
-        Sale.call("write", [[saleOrderId], {order_line: order_lines}], {}).then(function () {
+        console.log(order_lines);
+        Sale.call("write", [[orderId], {order_line: order_lines}], {}).then(function () {
             Sale.query(["id", "name"])
-                .filter([["id", "=", saleOrderId]])
+                .filter([["id", "=", orderId]])
                 .all()
                 .then(function (data) {
-                    alert("Sales order created: " + data[0].name);
-                    allVals.forEach(function (x) {
-                        removeItemFromCart(x.hashid);
+                    alert("Order created: " + data[0].name);
+                    items.forEach(function (x) {
+                        removeFromCart(x.hashid);
                     });
-                    $("#tesaShowCartDialog").modal("toggle");
+                    $("#tesaSAShowCartDialog").modal("toggle");
                 })
         })
     })
 }
 
-function createNewPurchaseOrder () {
-    var allVals = [];
-    $('input[class=tesa-cart-item]:checked').each(function() {
-        allVals.push(JSON.parse($(this).val()));
-    });
-
-    if (allVals.length == 0) {
-        alert("No products chosen.");
-        return;
-    }
-
+function createNewPurchaseOrder (partner, location, picking, items) {
+    // Create
     var Purchase = new openerp.Model("purchase.order");
     Purchase.call("create", [{
-        partner_id: 1,
-        location_id: 1,
-        pricelist_id: 1,
-    }], {}).then(function (purchaseOrderId) {
-        if (!purchaseOrderId) {
+        partner_id: partner,
+        location_id: location,
+        picking_type_id: picking,
+        pricelist_id: 2,
+    }], {}).then(function (orderId) {
+        if (!orderId) {
             alert("Can not create. Contact administrator.");
             return;
         }
         var order_lines = [];
-        allVals.forEach(function (line) {
+        items.forEach(function (line) {
             order_lines.push([0, false, {
                 delay: 0,
                 name: line.name,
                 product_id: line.id,
                 price_unit: line.price,
-                product_uom_qty: line.qty,
+                product_qty: line.quantity,
                 date_planned: new Date().toISOString(),
             }]);
         });
-        Purchase.call("write", [[purchaseOrderId], {order_line: order_lines}], {}).then(function () {
+        Purchase.call("write", [[orderId], {order_line: order_lines}], {}).then(function () {
             Purchase.query(["id", "name"])
-                .filter([["id", "=", purchaseOrderId]])
+                .filter([["id", "=", orderId]])
                 .all()
                 .then(function (data) {
                     alert("Purchase order created: " + data[0].name);
-                    allVals.forEach(function (x) {
-                        removeItemFromCart(x.hashid);
+                    items.forEach(function (x) {
+                        removeFromCart(x.hashid);
                     });
-                    $("#tesaShowCartDialog").modal("toggle");
+                    $("#tesaSAShowCartDialog").modal("toggle");
                 })
         })
     })
+}
+
+function actionCreateNewSalesOrder () {
+    var items = getCartSelectedItems();
+    if (items.length == 0) {
+        alert("No Items Selected");
+        return;
+    }
+
+    var warehouse = $('input[name=tesaSAProductNewOLocation]:checked').val();
+    getWarehouse(warehouse, function (warehouse_id) {
+        createNewSalesOrder(1, warehouse_id, items);
+    });
+}
+
+function actionCreateNewPurchaseOrder () {
+    var items = getCartSelectedItems();
+    if (items.length == 0) {
+        alert("No Items Selected");
+        return;
+    }
+
+    var location = $('input[name=tesaSAProductNewOLocation]:checked').val();
+    getLocation(location, function (location_id) {
+        getPickingType(location_id, function (picking_type_id) {
+            createNewPurchaseOrder(1, location_id, picking_type_id, items);
+        });
+    });
 }
