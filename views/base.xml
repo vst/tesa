@@ -70,67 +70,43 @@
       </xpath>
     </template>
 
+    <!-- Search and Cart related base changes -->
     <template id="web_layout" name="web_layout" inherit_id="web.webclient_bootstrap">
       <xpath expr="//t/div/table" position="after">
 
-        <div id="tesaShowCartDialog" class="modal fade">
+        <div id="tesaSAShowCartDialog" class="modal fade">
           <div class="modal-dialog modal-lg">
             <div class="modal-content">
               <div class="modal-header">
                 <h4>Existing Items in the Cart</h4>
               </div>
-              <div class="modal-body" id="tesaShowCartContainer"></div>
+              <div class="modal-body" id="tesaSAShowCartContainer"></div>
             </div><!-- /.modal-content -->
           </div><!-- /.modal-dialog -->
         </div><!-- /.modal -->
 
-        <div id="tesaProductSearchDialog" class="modal fade">
-          <div class="modal-dialog modal-lg" style="width:95%;min-width:900px;">
+
+        <div id="tesaSAProductCartDialog" class="modal fade">
+          <div class="modal-dialog modal-lg">
             <div class="modal-content">
-              <div class="modal-header bg-info">
-                <span class="oe_form_field">
-                  <button id="tesaProductSearchButton" style="float: right;">Search</button>
-                  <label for="teseProductSearchKeyword" style="float: left;">Product Code:</label>
-                  <span style="overflow: hidden;display: block;padding: 0 4px 0 10px;"><input type="text" id="teseProductSearchKeyword" style="width:100%" onkeydown="if (event.keyCode == 13) document.getElementById('tesaProductSearchButton').click()" /></span>
-                </span>
-              </div>
-              <div class="modal-body" id="tesaProductSearchResultContainer"></div>
+              <div class="modal-body" id="tesaSAProductCartDialogContainer"></div>
             </div><!-- /.modal-content -->
           </div><!-- /.modal-dialog -->
         </div><!-- /.modal -->
 
-        <div id="tesaMultipleProductSearchDialog" class="modal fade">
-          <div class="modal-dialog modal-lg" style="width:95%;min-width:900px;">
-            <div class="modal-content">
-              <div class="modal-header bg-info clearfix">
-                <div><textarea id="teseMultipleProductSearchKeyword" style="width:100%" rows="12"></textarea></div>
-                <div>
-                  <button id="tesaMultipleProductSearchClearButton" onclick="clearMultipleSearchResults()">Search Clear</button>
-                  <button id="tesaMultipleProductSearchButton">Search</button>
-                </div>
-              </div>
-              <div class="modal-body" id="tesaMultipleProductSearchResultContainer"></div>
-            </div><!-- /.modal-content -->
-          </div><!-- /.modal-dialog -->
-        </div><!-- /.modal -->
 
-        <div id="tesaProductAddToCartDialog" class="modal fade">
-          <div class="modal-dialog">
-            <div class="modal-content">
-              <div class="modal-body" id="tesaProductAddToCartContainer"></div>
-            </div><!-- /.modal-content -->
-          </div><!-- /.modal-dialog -->
-        </div><!-- /.modal -->
-
-        <script id="tesaCartTemplate" type="text/x-handlebars-template">
+        <!-- BEGIN TEMPLATES -->
+        <script id="tesaSACartTemplate" type="text/x-handlebars-template">
           <div class="row">
-            <div class="col-md-8">
+            <div class="col-md-12">
               <table class="table table-condensed table-bordered">
                 <tr>
                   <th>Code</th>
                   <th>Name</th>
                   <th style="text-align:right;">Price</th>
                   <th style="text-align:right;">Quantity</th>
+                  <th style="text-align:center;">Location</th>
+                  <th style="text-align:center;">For</th>
                   <th style="text-align:center;">Tag</th>
                   <th></th>
                 </tr>
@@ -139,151 +115,156 @@
                   <td>{{code}}</td>
                   <td>{{name}}</td>
                   <td style="text-align:right;">{{price}}</td>
-                  <td style="text-align:right;">{{qty}}</td>
+                  <td style="text-align:right;">{{quantity}}</td>
+                  <td style="text-align:center;">{{location}}</td>
+                  <td style="text-align:center;">{{cfor}}</td>
                   <td style="text-align:center;">{{tag}}</td>
-                  <td><input type="checkbox" class="tesa-cart-item" value="{{cartsel id price qty name uid}}" name="{{uid}}"/></td>
+                  <td><input type="checkbox" class="tesa-cart-item" value="{{cartsel .}}" name="{{hashid}}"/></td>
                 </tr>
                 {{/each}}
               </table>
             </div>
-            <div class="col-md-4">
-              <div style="margin-bottom:10px;"><a href="javascript:createNewSalesOrder()" class="btn btn-primary btn-sm">Create New Sales Quotation</a></div>
-              <div><a href="javascript:createNewPurchaseOrder()" class="btn btn-danger btn-sm">Create New Purchase Quotation</a></div>
-            </div>
           </div>
-        </script>
-
-        <script id="tesaProductAddToCartTemplate" type="text/x-handlebars-template">
           <div class="row">
-            <div class="col-md-6">
-              <table class="table">
-                <tr><td>Code</td><td>{{default_code}}</td></tr>
-                <tr><td>Name</td><td><a href="/web?#id={{id}}&amp;view_type=form&amp;model=product.product&amp;action=135" target="_blank">{{name}}</a></td></tr>
-                <tr><td>Brand</td><td>{{lookup brand 1}}</td></tr>
-                <tr><td>List Price</td><td style="text-align:right;"><a href="javascript:addPriceForCart({{lst_price}});">{{formatCurrency lst_price}}</a></td></tr>
-                <tr><td>Cash Sales Price</td><td style="text-align:right;"><a href="javascript:addPriceForCart({{minimum_cash_sales_price}});">{{formatCurrency minimum_cash_sales_price}}</a></td></tr>
-                <tr><td>Export Sales Price</td><td style="text-align:right;"><a href="javascript:addPriceForCart({{export_sales_price}});">{{formatCurrency export_sales_price}}</a></td></tr>
-                <tr><td>Minimum Sales Price</td><td style="text-align:right;"><a href="javascript:addPriceForCart({{minimum_sales_price}});">{{formatCurrency minimum_sales_price}}</a></td></tr>
-                <tr><td>Special Sales Price</td><td style="text-align:right;"><a href="javascript:addPriceForCart({{special_sales_price}});">{{formatCurrency special_sales_price}}</a></td></tr>
-                <tr><td>In Hand</td><td style="text-align:right;">{{qty_available}}</td></tr>
-                <tr><td>Incoming/Outgoing</td><td style="text-align:right;">{{incoming_qty}}</td></tr>
-                <tr><td>Future Quanitty</td><td style="text-align:right;">{{virtual_available}}</td></tr>
-                <tr><td>A Quantity</td><td style="text-align:right;">{{stock_A_real}}</td></tr>
-                <tr><td>B Quantity</td><td style="text-align:right;">{{stock_B_real}}</td></tr>
-                <tr><td>C Quantity</td><td style="text-align:right;">{{stock_C_real}}</td></tr>
-              </table>
-            </div>
-            <div class="col-md-6">
-              <table class="table">
-                <tr>
-                  <td>Quantity</td><td><input id="tesaProductAddToCartQuantity" /></td>
-                </tr>
-                <tr>
-                  <td>Price</td><td><input id="tesaProductAddToCartPrice" /></td>
-                </tr>
-                <tr>
-                  <td>Tag</td><td><input id="tesaProductAddToCartTag" /></td>
-                </tr>
-                <tr>
-                  <input type="hidden" id="tesaProductAddToCartCode" value="{{default_code}}" />
-                  <input type="hidden" id="tesaProductAddToCartName" value="{{name}}" />
-                  <td></td><td><a href="javascript:addToCart({{id}})" class="btn btn-default">Add to Cart</a></td>
-                </tr>
-              </table>
+            <div class="col-md-12">
+              <label for="tesaSAProductNewOLocationA" style="width:65px;">Location</label>
+              <label for="tesaSAProductNewOLocationA">A</label>
+              <input type="radio" name="tesaSAProductNewOLocation" id="tesaSAProductNewOLocationA" value="A" checked="checked" />
+              <label for="tesaSAProductNewOLocationB">B</label>
+              <input type="radio" name="tesaSAProductNewOLocation" id="tesaSAProductNewOLocationB" value="B" />
+              <label for="tesaSAProductNewOLocationC">C</label>
+              <input type="radio" name="tesaSAProductNewOLocation" id="tesaSAProductNewOLocationC" value="C" />
+              <div class="btn-group">
+                <a href="javascript:actionCreateNewSalesOrder()" class="btn btn-success btn-sm" style="color:white;">Create New SO</a>
+                <a href="javascript:actionCreateNewPurchaseOrder()" class="btn btn-danger btn-sm" style="color:white;">Create New PO</a>
+              </div>
             </div>
           </div>
         </script>
 
-        <script id="tesaProductSearchResultTableTemplate" type="text/x-handlebars-template">
-          <table class="table table-condensed table-hover table-bordered tesaProductSearchResultTable">
-            <thead>
-              <tr>
-                <th style="text-align:right;">#</th>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Brand</th>
-                <th style="text-align:right;">Price</th>
-                <th style="text-align:right;">CHS</th>
-                <th style="text-align:right;">EXP</th>
-                <th style="text-align:right;">MIN</th>
-                <th style="text-align:right;">SNP</th>
-                <th style="text-align:right;">HND</th>
-                <th style="text-align:right;">INC</th>
-                <th style="text-align:right;">FUT</th>
-                <th style="text-align:right;">@A</th>
-                <th style="text-align:right;">@B</th>
-                <th style="text-align:right;">@C</th>
-                <th style="text-align:right;"></th>
-              </tr>
-            </thead>
-          </table>
+        <script id="tesaSAProductCartDialogTemplate" type="text/x-handlebars-template">
+          <div class="row lead">
+            <div class="col-md-3">{{default_code}}</div>
+            <div class="col-md-6">{{name}}</div>
+            <div class="col-md-3">{{lookup brand 1}}</div>
+          </div>
+          <hr />
+          <div class="row">
+            <div class="col-md-4">
+              <div class="panel panel-default">
+                <div class="panel-heading">Pricing (Sales)</div>
+                <table class="table">
+                  <tr>
+                    <td>List Price</td>
+                    <td style="text-align:right;"><a href="javascript:actionSACopyPrice({{lst_price}});">{{formatCurrency lst_price}}</a></td>
+                  </tr>
+                  <tr>
+                    <td>Cash Sales</td>
+                    <td style="text-align:right;"><a href="javascript:actionSACopyPrice({{minimum_cash_sales_price}});">{{formatCurrency minimum_cash_sales_price}}</a></td>
+                  </tr>
+                  <tr>
+                    <td>Export Sales</td>
+                    <td style="text-align:right;"><a href="javascript:actionSACopyPrice({{export_sales_price}});">{{formatCurrency export_sales_price}}</a></td>
+                  </tr>
+                  <tr>
+                    <td>Minimum Sales</td>
+                    <td style="text-align:right;"><a href="javascript:actionSACopyPrice({{minimum_sales_price}});">{{formatCurrency minimum_sales_price}}</a></td>
+                  </tr>
+                  <tr>
+                    <td>Special Sales</td>
+                    <td style="text-align:right;"><a href="javascript:actionSACopyPrice({{special_sales_price}});">{{formatCurrency special_sales_price}}</a></td>
+                  </tr>
+                </table>
+              </div>
+
+              <div class="panel panel-default">
+                <div class="panel-heading">Pricing (Purchasing)</div>
+                <table class="table">
+                  <tr>
+                    <td>Manual Price</td>
+                    <td style="text-align:right;"><a href="javascript:actionSACopyPrice({{manual_cost_price}});">{{formatCurrency manual_cost_price}}</a></td>
+                  </tr>
+                  <tr>
+                    <td>Cost Price</td>
+                    <td style="text-align:right;"><a href="javascript:actionSACopyPrice({{standard_price}});">{{formatCurrency standard_price}}</a></td>
+                  </tr>
+                  <tr>
+                    <td>ETK Cost Price</td>
+                    <td style="text-align:right;"><a href="javascript:actionSACopyPrice({{etk_cost_price}});">{{formatCurrency etk_cost_price}}</a></td>
+                  </tr>
+                  <tr>
+                    <td>Prev. Local Deal</td>
+                    <td style="text-align:right;"><a href="javascript:actionSACopyPrice({{previous_local_deal_cost_price}});">{{formatCurrency previous_local_deal_cost_price}}</a></td>
+                  </tr>
+                  <tr>
+                    <td>Curr. Local Deal</td>
+                    <td style="text-align:right;"><a href="javascript:actionSACopyPrice({{current_local_deal_cost_price}});">{{formatCurrency current_local_deal_cost_price}}</a></td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="panel panel-default">
+                <div class="panel-heading">Inventory</div>
+                <table class="table">
+                  <tr><td>In Hand</td><td style="text-align:right;">{{qty_available}}</td></tr>
+                  <tr><td>Incoming</td><td style="text-align:right;">{{incoming_qty}}</td></tr>
+                  <tr><td>Outgoing</td><td style="text-align:right;">{{outgoing_qty}}</td></tr>
+                  <tr><td>Future Quanitty</td><td style="text-align:right;">{{virtual_available}}</td></tr>
+                  <tr><td>A Quantity</td><td style="text-align:right;">{{stock_A_real}}</td></tr>
+                  <tr><td>B Quantity</td><td style="text-align:right;">{{stock_B_real}}</td></tr>
+                  <tr><td>C Quantity</td><td style="text-align:right;">{{stock_C_real}}</td></tr>
+                </table>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <input type="hidden" id="tesaSAProductCartId" value="{{id}}" />
+              <input type="hidden" id="tesaSAProductCartCode" value="{{default_code}}" />
+              <input type="hidden" id="tesaSAProductCartName" value="{{name}}" />
+              <div class="well">
+                <label for="tesaSAProductCartPrice" style="width:65px;">Price</label>
+                <input id="tesaSAProductCartPrice"  style="width:160px;" />
+                <label for="tesaSAProductCartQuantity" style="width:65px;">Quantity</label>
+                <input id="tesaSAProductCartQuantity"  style="width:160px;" value="1" />
+              </div>
+
+              <div class="well">
+                <label for="tesaSAProductCartTag" style="width:65px;">Tag</label>
+                <input id="tesaSAProductCartTag"  style="width:160px;" />
+                <label for="tesaSAProductCartLocationA" style="width:65px;">Location</label>
+                <label for="tesaSAProductCartLocationA">A</label>
+                <input type="radio" name="tesaSAProductCartLocation" id="tesaSAProductCartLocationA" value="A" checked="checked" />
+                <label for="tesaSAProductCartLocationB">B</label>
+                <input type="radio" name="tesaSAProductCartLocation" id="tesaSAProductCartLocationB" value="B" />
+                <label for="tesaSAProductCartLocationC">C</label>
+                <input type="radio" name="tesaSAProductCartLocation" id="tesaSAProductCartLocationC" value="C" />
+                <label for="tesaSAProductCartForSales" style="width:65px;">For</label>
+                <label for="tesaSAProductCartForSales">Sales</label>
+                <input type="radio" name="tesaSAProductCartFor" id="tesaSAProductCartForSales" value="Sales" checked="checked" />
+                <label for="tesaSAProductCartForPurchases">Purchases</label>
+                <input type="radio" name="tesaSAProductCartFor" id="tesaSAProductCartForPurchases" value="Purchases" />
+                <a href="javascript:actionSACartIt()" class="btn btn-default btn-block" style="margin-top:10px;">Add to Cart</a>
+              </div>
+
+              <div class="well">
+                <label for="tesaSAProductCartOrderName" style="width:65px;">Order ID</label>
+                <input id="tesaSAProductCartOrderName"  style="width:160px;" />
+                <div class="btn-group btn-group-justified" style="margin-top:10px;">
+                  <a href="javascript:addToExistingSO()" class="btn btn-default">Add to SO</a>
+                  <a href="javascript:addToExistingPO()" class="btn btn-default">Add to PO</a>
+                </div>
+              </div>
+
+              <a href="/web?#id={{id}}&amp;view_type=form&amp;model=product.product&amp;action=135" target="_blank">Go to Product</a>
+
+            </div>
+          </div>
         </script>
 
-        <script id="tesaProductSearchResultBodyTemplate" type="text/x-handlebars-template">
-          <thead>
-            <tr class="bg-primary">
-              <td colspan="16"  class="tesaProductSearchResultsHeader-{{searchcodehash}}">
-                <div class="pull-right tesa-loading"><i class="fa fa-spinner fa-spin"></i></div>
-                <h4>{{searchcode}}</h4>
-              </td>
-            </tr>
-          </thead>
-          <tbody class="tesaProductSearchResults-{{searchcodehash}}">
-          </tbody>
-        </script>
 
-        <script id="tesaProductSearchResultTemplate" type="text/x-handlebars-template">
-          {{#each items}}
-          <tr id="product-{{id}}">
-            <td style="text-align:right;" nowrap="nowrap">{{add1 @index}} <a href="javascript:tesaDisplayOEMS({{id}})"><i class="glyphicon glyphicon-chevron-right"></i></a></td>
-              <td>{{default_code}}</td>
-              <td><a href="/web?#id={{id}}&amp;view_type=form&amp;model=product.product&amp;action=135" target="_blank">{{name}}</a></td>
-              <td>{{lookup brand 1}}</td>
-              <td style="text-align:right;">{{formatCurrency lst_price}}</td>
-              <td style="text-align:right;">{{formatCurrency minimum_cash_sales_price}}</td>
-              <td style="text-align:right;">{{formatCurrency export_sales_price}}</td>
-              <td style="text-align:right;">{{formatCurrency minimum_sales_price}}</td>
-              <td style="text-align:right;">{{formatCurrency special_sales_price}}</td>
-              <td style="text-align:right;" class="{{# if qty_available }}bg-success{{else}}bg-danger{{/if}}">{{qty_available}}</td>
-              <td style="text-align:right;">{{incoming_qty}}</td>
-              <td style="text-align:right;">{{virtual_available}}</td>
-              <td style="text-align:right;">{{stock_A_real}}</td>
-              <td style="text-align:right;">{{stock_B_real}}</td>
-              <td style="text-align:right;">{{stock_C_real}}</td>
-              <td style="text-align:right;"><a href="javascript:addToCartDialog({{id}})"><i class="glyphicon glyphicon-shopping-cart"></i></a></td>
-          </tr>
-          {{/each}}
-        </script>
 
-        <script id="tesaProductSearchResultRowTemplate" type="text/x-handlebars-template">
-          {{#each items}}
-          <tr id="product-oem-{{id}}" class="bg-warning product-oem-for-{{../id}}" style="border-right:2px solid black;border-left:2px solid black;{{#if @last}}border-bottom:2px solid black;{{/if}}">
-            <td style="text-align:right;" nowrap="nowrap"><i class="glyphicon glyphicon-list"></i></td>
-            <td>{{default_code}}</td>
-            <td><a href="/web?#id={{id}}&amp;view_type=form&amp;model=product.product&amp;action=135" target="_blank">{{name}}</a></td>
-            <td>{{lookup brand 1}}</td>
-            <td style="text-align:right;">{{formatCurrency lst_price}}</td>
-            <td style="text-align:right;">{{formatCurrency minimum_cash_sales_price}}</td>
-            <td style="text-align:right;">{{formatCurrency export_sales_price}}</td>
-            <td style="text-align:right;">{{formatCurrency minimum_sales_price}}</td>
-            <td style="text-align:right;">{{formatCurrency special_sales_price}}</td>
-            <td style="text-align:right;" class="{{# if qty_available }}bg-success{{else}}bg-danger{{/if}}">{{qty_available}}</td>
-            <td style="text-align:right;">{{incoming_qty}}</td>
-            <td style="text-align:right;">{{virtual_available}}</td>
-            <td style="text-align:right;">{{stock_A_real}}</td>
-            <td style="text-align:right;">{{stock_B_real}}</td>
-            <td style="text-align:right;">{{stock_C_real}}</td>
-            <td style="text-align:right;"><a href="javascript:addToCartDialog({{id}})"><i class="glyphicon glyphicon-shopping-cart"></i></a></td>
-          </tr>
-          {{/each}}
-        </script>
-
-        <script id="tesaProductSearchResultEmptyRowTemplate" type="text/x-handlebars-template">
-          <tr class="bg-danger product-oem-for-{{id}}" style="border-right:2px solid black;border-left:2px solid black;border-bottom:2px solid black;">
-            <td style="text-align:right;" nowrap="nowrap"><i class="glyphicon glyphicon-exclamation-sign"></i></td>
-            <td colspan="15">No OEM.</td>
-          </tr>
-        </script>
 
       </xpath>
     </template>

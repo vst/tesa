@@ -10,8 +10,13 @@
             </ul>
         </t>
     </t>
+
     <t t-extend="WebClient" >
         <t t-jquery="td.announcement_bar" t-operation="replace">
         </t>
+    </t>
+
+    <t t-name="cartit">
+      <span class="tesa-product-default-code"></span> <i class="glyphicon glyphicon-shopping-cart"></i>
     </t>
 </templates>

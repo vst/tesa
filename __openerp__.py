@@ -1,10 +1,10 @@
 {
     "name": "tesa",
-    "version": "0.0.10",
+    "version": "0.0.11",
     "author": "Telosoft",
     "category": "Tools",
     "website": "http://www.telosoft.com",
-    "description": """Provides an ERP Implementation and Customization Addon (Version 0.0.10)""",
+    "description": """Provides an ERP Implementation and Customization Addon (Version 0.0.11)""",
     "depends": [
         "base",
         "account_accountant",
