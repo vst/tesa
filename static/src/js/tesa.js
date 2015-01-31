@@ -12,7 +12,7 @@ openerp.tesa = function (instance) {
 
     // Connect keybinding for product search:
     $(document).bind("keydown", "ctrl+e", function () {
-        var code = prompt();
+        var code = prompt("Enter the exact product code:");
         if (code && code.trim()) {
             actionCartProductByCode(code.trim());
         }
