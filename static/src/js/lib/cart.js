@@ -108,3 +108,25 @@ function getCartSelectedItems () {
 
     return allVals;
 }
+
+
+function actionCartFromProductPage () {
+    var code = $(".tesa-default-code:last span span").html();
+    if (code && code.trim()) {
+        actionCartProductByCode(code.trim());
+    }
+}
+
+function actionCartProductByCode (code) {
+    var Product = new openerp.Model("product.product");
+    Product.query(["id"])
+        .filter([["default_code", "=", code]])
+        .all().then (function (items) {
+            if (items && items.length == 1) {
+                actionSACartDialog(items[0].id);
+            }
+            else {
+                alert("Cannot find item...");
+            }
+        });
+}

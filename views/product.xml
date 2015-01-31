@@ -21,13 +21,23 @@
       <field name="inherit_id" ref="product.product_normal_form_view" />
       <field name="arch" type="xml">
         <data>
+          <!-- Add add to cart button -->
+          <xpath expr="//div[@name='buttons']" position="inside">
+            <a href="javascript:actionCartFromProductPage();" class="oe_stat_button btn btn-default oe_inline">
+              <div class="stat_button_icon fa fa-shopping-cart fa-fw"></div>
+              <div data-original-title="" title="">
+                Add to Cart
+              </div>
+            </a>
+          </xpath>
+
           <!-- Remove the default code from its current position: -->
           <field name="default_code" position="replace" />
 
           <!-- Add the default code right under the name: -->
           <label for="name" position="before">
             <label for="default_code" string="Product Number"/>
-            <h1><field name="default_code" class="oe_inline" /></h1>
+            <h1 class="tesa-default-code"><field name="default_code" class="oe_inline" /></h1>
           </label>
 
           <!-- Show the label for the name: -->
