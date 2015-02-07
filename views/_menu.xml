@@ -8,6 +8,11 @@
               parent="stock.menu_stock_product"
               sequence="2" />
 
+    <menuitem id="menu_product_update_form"
+              name="Update Products"
+              action="action_custom_product_upload"
+              parent="stock.menu_stock_product"
+              sequence="5" />
 
     <!-- MENU ITEMS: SEARCH -->
     <menuitem action="search" id="menu_client_search"/>

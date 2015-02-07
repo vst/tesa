@@ -207,9 +207,11 @@
       <field name="type">form</field>
       <field name="arch" type="xml">
         <form string="Custom Product Upload">
-          <field name="data" string="Browse File" />
-          <field name="createp" string="Create if product doesn't exist?" />
-          <group col="4" colspan="4">
+          <group>
+            <field name="data" string="Browse File" />
+            <field name="createp" string="Create if product doesn't exist?" />
+          </group>
+          <group>
             <button icon="gtk-cancel" special="cancel" string="Cancel"/>
             <button icon="gtk-ok" name="upload_product" string="Update" type="object"/>
           </group>
