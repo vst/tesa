@@ -200,5 +200,31 @@
       </field>
     </record>
 
+    <!-- Product upload -->
+    <record id="custom_product_upload" model="ir.ui.view">
+      <field name="name">Custom Product Upload</field>
+      <field name="model">config.product.upload</field>
+      <field name="type">form</field>
+      <field name="arch" type="xml">
+        <form string="Custom Product Upload">
+          <field name="data" string="Browse File" />
+          <field name="createp" string="Create if product doesn't exist?" />
+          <group col="4" colspan="4">
+            <button icon="gtk-cancel" special="cancel" string="Cancel"/>
+            <button icon="gtk-ok" name="upload_product" string="Update" type="object"/>
+          </group>
+        </form>
+      </field>
+    </record>
+
+    <record id="action_custom_product_upload" model="ir.actions.act_window">
+      <field name="name">Custom Product Upload</field>
+      <field name="type">ir.actions.act_window</field>
+      <field name="res_model">config.product.upload</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">form</field>
+      <field name="target">new</field>
+    </record>
+
   </data>
 </openerp>
