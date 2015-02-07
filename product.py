@@ -331,7 +331,7 @@ class ConfigProductUpload(osv.osv_memory):
         ## Done, return product:
         return product
 
-    def _update_product(self, data, cr, uid, context):
+    def _update_product(self, data, cr, uid, context, createp=False):
         _logger.info("Updating product %s" % (data["default_code"],))
 
         ## Get the product model:
@@ -342,7 +342,10 @@ class ConfigProductUpload(osv.osv_memory):
 
         ## Check result:
         if len(product) == 0:
-            raise osv.except_osv(_("Error!"), _("Product could not be found: %s." % (data["default_code"].strip(),)))
+            if createp:
+                return self._update_or_create_product(data, cr, uid, context)
+            else:
+                raise osv.except_osv(_("Error!"), _("Product could not be found: %s." % (data["default_code"].strip(),)))
 
         ## Create the product:
         product = product_model.write(cr, uid, product, self.clean_data(data, cr, uid, context))
@@ -374,15 +377,13 @@ class ConfigProductUpload(osv.osv_memory):
             if (not "default_code" in line) or (line["default_code"].strip() == ""):
                 raise osv.except_osv(_("Error!"), _("Required field 'default_code' cannot be found."))
 
-            ## Check if we can create:
-            if create_flag:
-                self._update_or_create_product(line, cr, uid, context)
-            else:
-                self._update_product(line, cr, uid, context)
+            ## Update the product:
+            self._update_product(line, cr, uid, context, create_flag)
 
         return {
             "type": "ir.actions.act_window_close",
          }
+
 
 ConfigProductUpload.mapper = {
     "default_code": lambda x, y, a, b, c: x.strip(),
