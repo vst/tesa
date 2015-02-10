@@ -1,8 +1,11 @@
 ## Imports
+from StringIO import StringIO
 from openerp.osv import osv, fields, expression
-from openerp.osv import fields, osv
-import re
+from openerp.tools.translate import _
+import base64
+import csv
 import logging
+import re
 
 
 ## Get the logger:
@@ -89,7 +92,7 @@ class ProductVariantModel(osv.osv):
         if context is None:
             context = {}
         ctx = dict(context or {}, create_product_product=True)
-        return super(product_product, self).create(cr, uid, vals, context=ctx)
+        return super(ProductVariantModel, self).create(cr, uid, vals, context=ctx)
 
     def get_related_oems(self, cr, uid, ids, field_names=None, arg=None, context=None):
         """
@@ -242,3 +245,170 @@ class SupplierInfoModel(osv.osv):
 
 
 SupplierInfoModel()
+
+
+class ConfigProductUpload(osv.osv_memory):
+    _name="config.product.upload"
+
+    _columns = {
+        "data": fields.binary("File"),
+        "createp": fields.boolean("Create if it doesn't exist"),
+    }
+
+    _defaults = {
+        "createp": False,
+    }
+
+    defaults = {
+        "type": "product",
+    }
+
+    @classmethod
+    def get_product(cls, product, wizard, cr, uid, context):
+        ## Get the product model:
+        product_model = wizard.pool.get("product.product")
+
+        ## Get the product:
+        product = product_model.search(cr, uid, [("default_code", "=", product.strip())], limit=1, context=context)
+
+        ## Check result:
+        if len(product) == 0:
+            raise osv.except_osv(_("Error!"), _("Product could not be found: %s." % (product.strip(),)))
+
+        ## Done, return:
+        return product[0]
+
+    @classmethod
+    def get_brand(cls, brand, wizard, cr, uid, context):
+        ## Get the brand model:
+        brand_model = wizard.pool.get("product.brand")
+
+        ## Get the brand:
+        brand = brand_model.search(cr, uid, [("code", "=", brand.strip())], limit=1, context=context)
+
+        ## Check result:
+        if len(brand) == 0:
+            raise osv.except_osv(_("Error!"), _("Brand could not be found: %s." % (brand.strip(),)))
+
+        ## Done, return:
+        return brand[0]
+
+    @classmethod
+    def get_uom(cls, uom, wizard, cr, uid, context):
+        ## Get the uom model:
+        uom_model = wizard.pool.get("product.uom")
+
+        ## Get the uom:
+        uom = uom_model.search(cr, uid, [("name", "=", uom.strip())], limit=1, context=context)
+
+        ## Check result:
+        if len(uom) == 0:
+            raise osv.except_osv(_("Error!"), _("Unit of measure could not be found: %s." % (uom.strip(),)))
+
+        ## Done, return:
+        return uom[0]
+
+    def clean_data(self, data, cr, uid, context):
+        new_data = self.defaults.copy()
+        for key in data:
+            if key in self.mapper:
+                new_data[key] = self.mapper[key](data[key], self, cr, uid, context)
+            else:
+                new_data[key] = data[key]
+            if key == "uom_id":
+                new_data["uom_po_id"] = new_data["uom_id"]
+        return new_data
+
+    def _update_or_create_product(self, data, cr, uid, context):
+        _logger.info("Creating product %s" % (data["default_code"],))
+
+        ## Get the product model:
+        product_model = self.pool.get("product.product")
+
+        ## Create the product:
+        product = product_model.create(cr, uid, self.clean_data(data, cr, uid, context))
+
+        ## Done, return product:
+        return product
+
+    def _update_product(self, data, cr, uid, context, createp=False):
+        _logger.info("Updating product %s" % (data["default_code"],))
+
+        ## Get the product model:
+        product_model = self.pool.get("product.product")
+
+        ## Get the product:
+        product = product_model.search(cr, uid, [("default_code", "=", data["default_code"].strip())], limit=1, context=context)
+
+        ## Check result:
+        if len(product) == 0:
+            if createp:
+                return self._update_or_create_product(data, cr, uid, context)
+            else:
+                raise osv.except_osv(_("Error!"), _("Product could not be found: %s." % (data["default_code"].strip(),)))
+
+        ## Create the product:
+        product = product_model.write(cr, uid, product, self.clean_data(data, cr, uid, context))
+
+        ## Done, return product:
+        return product
+
+    def upload_product(self, cr, uid, ids, context=None):
+        ## Get the wizard:
+        wizard = self.read(cr, uid, ids[0], ["data", "createp"], context=context)
+
+        ## Get the data:
+        data = base64.decodestring(wizard.get("data"))
+
+        ## Get flag:
+        create_flag = wizard.get("createp")
+
+        ## Get the specs:
+        specs = []
+        try:
+            specs = csv.DictReader(StringIO(data))
+        except Exception, e:
+            print e
+            raise osv.except_osv(_("Error!"), _("Can not read the CSV file. Please check the format."))
+
+        ## Iterate over lines and act accordingly:
+        for line in specs:
+            ## Check the default code:
+            if (not "default_code" in line) or (line["default_code"].strip() == ""):
+                raise osv.except_osv(_("Error!"), _("Required field 'default_code' cannot be found."))
+
+            ## Update the product:
+            self._update_product(line, cr, uid, context, create_flag)
+
+        return {
+            "type": "ir.actions.act_window_close",
+         }
+
+
+ConfigProductUpload.mapper = {
+    "default_code": lambda x, y, a, b, c: x.strip(),
+    "name": lambda x, y, a, b, c: x.strip(),
+    "description": lambda x, y, a, b, c: x.strip(),
+    "ean13": lambda x, y, a, b, c: x.strip(),
+    "manufactured_in": lambda x, y, a, b, c: x.strip(),
+    "application_code": lambda x, y, a, b, c: x.strip(),
+    "weight_migrate": lambda x, y, a, b, c: x.strip(),
+    "lst_price": lambda x, y, a, b, c: float(x.strip()),
+    "minimum_cash_sales_price": lambda x, y, a, b, c: float(x.strip()),
+    "export_sales_price": lambda x, y, a, b, c: float(x.strip()),
+    "minimum_sales_price": lambda x, y, a, b, c: float(x.strip()),
+    "special_sales_price": lambda x, y, a, b, c: float(x.strip()),
+    "manual_cost_price": lambda x, y, a, b, c: float(x.strip()),
+    "previous_local_deal_cost_price": lambda x, y, a, b, c: float(x.strip()),
+    "current_local_deal_cost_price": lambda x, y, a, b, c: float(x.strip()),
+    "etk_cost_price": lambda x, y, a, b, c: float(x.strip()),
+    "core_charges": lambda x, y, a, b, c: float(x.strip()),
+    "local_deal_discount_rate": lambda x, y, a, b, c: x.strip(),
+    "etk_discount_rate": lambda x, y, a, b, c: x.strip(),
+    "application_code": lambda x, y, a, b, c: x.strip(),
+    "brand": ConfigProductUpload.get_brand,
+    "oem": ConfigProductUpload.get_product,
+    "uom_id": ConfigProductUpload.get_uom,
+}
+
+ConfigProductUpload()

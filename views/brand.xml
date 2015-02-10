@@ -9,12 +9,26 @@
         <form string="brand" version="7.0">
           <sheet>
             <group>
+              <field name="code"/>
               <field name="name"/>
               <field name="manufactured"/>
               <field name="description"/>
             </group>
           </sheet>
         </form>
+      </field>
+    </record>
+
+    <record id="view_brand_treeview" model="ir.ui.view">
+      <field name="name">product.brand.tree.view</field>
+      <field name="model">product.brand</field>
+      <field name="view_type">tree</field>
+      <field name="arch" type="xml">
+        <tree string="Brands">
+          <field name="code" />
+          <field name="name" />
+          <field name="manufactured" />
+        </tree>
       </field>
     </record>
 

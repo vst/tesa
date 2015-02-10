@@ -103,7 +103,7 @@ function searchLikeWorker (car, cdr, callback) {
     console.debug("Searching " + car.keyword);
     SAProduct.query(SAProductSearchFields)
         .filter([["default_code", "ilike", car.keyword]])
-        .limit(100)
+        .limit(500)
         .all()
         .then(function (items) {
             callback(car, items);
