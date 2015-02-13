@@ -8,11 +8,18 @@
               parent="stock.menu_stock_product"
               sequence="2" />
 
+    <!-- MENU ITEMS: PRODUCT UPDATE -->
     <menuitem id="menu_product_update_form"
               name="Update Products"
               action="action_custom_product_upload"
               parent="stock.menu_stock_product"
               sequence="5" />
+
+    <menuitem id="menu_product_update_form"
+              name="Update Supplier Price"
+              action="action_upload_supplier_price_list"
+              parent="purchase.menu_procurement_management_product"
+              sequence="20" />
 
     <!-- MENU ITEMS: SEARCH -->
     <menuitem action="search" id="menu_client_search"/>
