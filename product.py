@@ -412,3 +412,109 @@ ConfigProductUpload.mapper = {
 }
 
 ConfigProductUpload()
+
+
+class ConfigProductSupplierPriceUpload(osv.osv_memory):
+    _name="config.product.supplierpriceupload"
+
+    _columns = {
+        "data": fields.binary("File"),
+    }
+
+    @classmethod
+    def get_product(cls, product, wizard, cr, uid, context):
+        ## Get the product model:
+        product_model = wizard.pool.get("product.product")
+
+        ## Get the product:
+        product = product_model.search(cr, uid, [("default_code", "=", product.strip())], limit=1, context=context)
+
+        ## Check result:
+        if len(product) == 0:
+            raise osv.except_osv(_("Error!"), _("Product could not be found: %s." % (product.strip(),)))
+
+        ## Done, return:
+        return product[0]
+
+    @classmethod
+    def update_supplierinfo(cls, cr, uid, context, model, product, supplier, price):
+        ## Search for the item:
+        item = model.search(cr, uid, [("product_tmpl_id", "=", product), ("name", "=", supplier)], limit=1, context=context)
+        print product, supplier, price, item
+
+        ## Update if it exists:
+        if len(item) > 0:
+            ## Yes, update:
+            model.write(cr, uid, item[0], dict(rep_price=price))
+        else:
+            model.create(cr, uid, dict(rep_price=price, product_tmpl_id=product, name=supplier))
+
+
+    def _update(self, data, cr, uid, context):
+        _logger.info("Updating product price %s" % (data["default_code"],))
+
+        ## Get the product model:
+        product_model = self.pool.get("product.product")
+
+        ## Get the product:
+        product = product_model.search_read(cr, uid, [("default_code", "=", data["default_code"].strip())], fields=["product_tmpl_id"], limit=1, context=context)
+
+        ## Check result:
+        if len(product) == 0:
+            _logger.info("Product not found %s." % (data["default_code"],))
+            return
+
+        ## Get the object:
+        product = product[0]["product_tmpl_id"][0]
+
+        ## Get the partner:
+        partner_model = self.pool.get("res.partner")
+
+        ## Get the partner:
+        partner = partner_model.search(cr, uid, [("ref", "=", data["supplier"].strip())], limit=1, context=context)
+
+        ## Check result:
+        if len(partner) == 0:
+            raise osv.except_osv(_("Error!"), _("Partner could not be found: %s." % (partner.strip(),)))
+
+        ## Get the object:
+        partner = partner[0]
+
+        ## Get the product supplier info:
+        self.update_supplierinfo(cr, uid, context, self.pool.get("product.supplierinfo"), product, partner, data["price"].strip())
+
+        ## Done, return product:
+        return product
+
+    def upload_supplier_price_list(self, cr, uid, ids, context=None):
+        ## Get the wizard:
+        wizard = self.read(cr, uid, ids[0], ["data"], context=context)
+
+        ## Get the data:
+        data = base64.decodestring(wizard.get("data"))
+
+        ## Get the specs:
+        specs = []
+        try:
+            specs = csv.DictReader(StringIO(data))
+        except Exception, e:
+            print e
+            raise osv.except_osv(_("Error!"), _("Can not read the CSV file. Please check the format."))
+
+        ## Iterate over lines and act accordingly:
+        for line in specs:
+            ## Check the default code:
+            if (not "default_code" in line) or (line["default_code"].strip() == "") or \
+               (not "supplier" in line) or (line["supplier"].strip() == "") or \
+               (not "price" in line) or (line["price"].strip() == ""):
+                raise osv.except_osv(_("Error!"), _("Required fields 'default_code', 'supplier', 'price' could not be found."))
+
+            ## Update the product:
+            self._update(line, cr, uid, context)
+
+        return {
+            "type": "ir.actions.act_window_close",
+         }
+
+
+ConfigProductSupplierPriceUpload()
