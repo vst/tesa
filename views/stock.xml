@@ -24,6 +24,7 @@
             <th class="text-right"><strong>Quantity</strong></th>
             <t t-if="o.picking_type_id.code != 'incoming'"><th><strong>Source</strong></th></t>
             <th><strong>Barcode</strong></th>
+            <t t-if="o.picking_type_id.code == 'incoming'"><th>Related</th></t>
             <t t-if="o.picking_type_id.code != 'outgoing'"><th><strong>Destination</strong></th></t>
           </tr>
         </thead>
@@ -40,6 +41,7 @@
                 <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('EAN13', move.product_id.ean13, 600, 100)" style="width:300px;height:50px"/>
               </span>
             </td>
+            <t t-if="o.picking_type_id.code == 'incoming'"><td><span t-field="move.related_sales_info"/></td></t>
             <t t-if="o.picking_type_id.code != 'outgoing'"><td><span t-field="move.location_dest_id"/></td></t>
           </tr>
         </tbody>
