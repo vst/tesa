@@ -1,3 +1,4 @@
+import partner
 import product
 import brand
 import stock
