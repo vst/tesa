@@ -17,6 +17,7 @@
         "account_cancel",
         "stock_reserve_sale",
         "partner_credit_limit",
+        "purchase_discount",
     ],
     "init_xml": [
     ],
