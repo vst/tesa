@@ -85,7 +85,10 @@ class ProductVariantModel(osv.osv):
 
         ## Exclude from the previous search and return the combination:
         super_result = []
-        super_result = super(ProductVariantModel, self).name_search(cr, user, name, args, operator, context, limit - len(result))
+        if limit is not None:
+            super_result = super(ProductVariantModel, self).name_search(cr, user, name, args, operator, context, limit - len(result))
+        else:
+            super_result = super(ProductVariantModel, self).name_search(cr, user, name, args, operator, context)
         return result + [(i[0], "!" + i[1]) for i in super_result if not (i[0] in set(ids))]
 
     def create(self, cr, uid, vals, context=None):
