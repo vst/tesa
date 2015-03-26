@@ -18,6 +18,7 @@
         "stock_reserve_sale",
         "partner_credit_limit",
         "purchase_discount",
+        "sale_automatic_workflow",
     ],
     "init_xml": [
     ],
