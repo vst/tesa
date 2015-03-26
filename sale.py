@@ -47,6 +47,13 @@ class SaleOrderLineModel(osv.osv):
     }
 
 
+    def write(self, cr, uid, ids, vals, context=None):
+        retval = super(SaleOrderLineModel, self).write(cr, uid, ids, vals, context=context)
+        ## Update taxes:
+        print "Abbauv: ", retval, ids, vals
+        return retval
+
+
 SaleOrderLineModel()
 
 
@@ -54,10 +61,24 @@ class SaleOrderModel(osv.osv):
     _inherit = "sale.order"
 
     _columns = {
+        "tax_id": fields.many2one("account.tax", 'Tax', domain=[('type_tax_use', '=', "sale")], change_default=True),
         "xremarks": fields.text("Remarks"),
         "xsalesman": fields.char("Salesman", size=128),
         "xdeliverydate": fields.char("Delivery Date", size=256),
     }
+
+    def write(self, cr, uid, ids, vals, context=None):
+        retval = super(SaleOrderModel, self).write(cr, uid, ids, vals, context=context)
+        ## Update taxes:
+        for id in ids:
+            tax_id = self.search_read(cr, uid, [("id", "=", id)], fields=["tax_id"], context=context)[0]["tax_id"]
+            if tax_id:
+                lm = self.pool.get("sale.order.line")
+                which = lm.search(cr, uid, [("order_id", "=", id)], context=context)
+                print which
+                lm.write(cr, uid, which, dict(tax_id=[(6, 0, [tax_id[0]])]), context=context)
+        print "Saving: ", retval
+        return retval
 
 
 SaleOrderModel()
