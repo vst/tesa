@@ -103,10 +103,27 @@
           <field name="amount_total" position="before">
             <field name="currency_id" />
           </field>
+          <!-- Add type -->
+          <field name="amount_total" position="after">
+            <field name="stype" />
+          </field>
         </data>
       </field>
     </record>
 
+    <!-- FILTER ADD ADDITIONAL FILTER -->
+    <record id="tesa_view_sales_order_filter" model="ir.ui.view">
+      <field name="name">sale.order.list.select.tesa</field>
+      <field name="model">sale.order</field>
+      <field name="inherit_id" ref="sale.view_sales_order_filter"/>
+      <field name="arch" type="xml">
+        <xpath expr="/search/filter[2]" position="before">
+          <filter name="stype_cash" string="Cash Sales" domain="[('stype','=', 'cash')]" help="Cash Sales Filter"/>
+          <filter name="stype_cash" string="Local Sales" domain="[('stype','=', 'local')]" help="Local Sales Filter"/>
+          <filter name="stype_cash" string="Export Sales" domain="[('stype','=', 'export')]" help="Export Sales Filter"/>
+        </xpath>
+      </field>
+    </record>
     <!-- Change the sale order QWeb template -->
     <template id="report_saleorder_document" inherit_id="sale.report_saleorder_document">
       <xpath expr="//div[@class='page']" position="replace">
