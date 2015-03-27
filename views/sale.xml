@@ -124,6 +124,92 @@
         </xpath>
       </field>
     </record>
+
+    <!-- ADD ALL TOGETHER -->
+    <record id="tesa_action_all_sales" model="ir.actions.act_window">
+      <field name="name">Orders and Quotations</field>
+      <field name="type">ir.actions.act_window</field>
+      <field name="res_model">sale.order</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">tree,form,calendar,graph</field>
+      <field name="search_view_id" ref="sale.view_sales_order_filter"/>
+      <field name="context">{}</field>
+      <field name="help" type="html">
+        <p class="oe_view_nocontent_create">
+          Click to create a quotation that can be converted into a sales
+          order.
+          </p><p>
+          Odoo will help you efficiently handle the complete sales flow:
+          quotation, sales order, delivery, invoicing and payment.
+        </p>
+      </field>
+    </record>
+
+    <record id="tesa_action_cash_sales" model="ir.actions.act_window">
+      <field name="name">Cash Sales</field>
+      <field name="type">ir.actions.act_window</field>
+      <field name="res_model">sale.order</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">tree,form,calendar,graph</field>
+      <field name="search_view_id" ref="sale.view_sales_order_filter"/>
+      <field name="context">{}</field>
+      <field name="domain">[('stype','=','cash')]</field>
+      <field name="help" type="html">
+        <p class="oe_view_nocontent_create">
+          Click to create a quotation that can be converted into a sales
+          order.
+          </p><p>
+          Odoo will help you efficiently handle the complete sales flow:
+          quotation, sales order, delivery, invoicing and payment.
+        </p>
+      </field>
+    </record>
+
+    <record id="tesa_action_local_sales" model="ir.actions.act_window">
+      <field name="name">Local Sales</field>
+      <field name="type">ir.actions.act_window</field>
+      <field name="res_model">sale.order</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">tree,form,calendar,graph</field>
+      <field name="search_view_id" ref="sale.view_sales_order_filter"/>
+      <field name="context">{}</field>
+      <field name="domain">[('stype','=','local')]</field>
+      <field name="help" type="html">
+        <p class="oe_view_nocontent_create">
+          Click to create a quotation that can be converted into a sales
+          order.
+          </p><p>
+          Odoo will help you efficiently handle the complete sales flow:
+          quotation, sales order, delivery, invoicing and payment.
+        </p>
+      </field>
+    </record>
+
+    <record id="tesa_action_export_sales" model="ir.actions.act_window">
+      <field name="name">Export Sales</field>
+      <field name="type">ir.actions.act_window</field>
+      <field name="res_model">sale.order</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">tree,form,calendar,graph</field>
+      <field name="search_view_id" ref="sale.view_sales_order_filter"/>
+      <field name="context">{}</field>
+      <field name="domain">[('stype','=','export')]</field>
+      <field name="help" type="html">
+        <p class="oe_view_nocontent_create">
+          Click to create a quotation that can be converted into a sales
+          order.
+          </p><p>
+          Odoo will help you efficiently handle the complete sales flow:
+          quotation, sales order, delivery, invoicing and payment.
+        </p>
+      </field>
+    </record>
+
+    <menuitem id="menu_sale_all" action="tesa_action_all_sales" parent="base.menu_sales" sequence="-5"/>
+    <menuitem id="menu_sale_all_cash" action="tesa_action_cash_sales" parent="base.menu_sales" sequence="-4"/>
+    <menuitem id="menu_sale_all_local" action="tesa_action_local_sales" parent="base.menu_sales" sequence="-3"/>
+    <menuitem id="menu_sale_all_export" action="tesa_action_export_sales" parent="base.menu_sales" sequence="-2"/>
+
     <!-- Change the sale order QWeb template -->
     <template id="report_saleorder_document" inherit_id="sale.report_saleorder_document">
       <xpath expr="//div[@class='page']" position="replace">
