@@ -38,6 +38,11 @@
             <field name="tax_id" />
           </field>
 
+          <!-- Add sales type -->
+          <field name="partner_shipping_id" position="after">
+            <field name="stype" />
+          </field>
+
           <!-- Add product buttons -->
           <xpath expr="//field[@name='product_id']" position="before">
             <button name="browse_product_id"  icon="STOCK_FIND" type="object"/>

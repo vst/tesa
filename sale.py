@@ -61,6 +61,12 @@ class SaleOrderModel(osv.osv):
     _inherit = "sale.order"
 
     _columns = {
+        "stype": fields.selection([
+            ("cash", "Cash Sales"),
+            ("local", "Local Sales"),
+            ("export", "Export Sales"),
+        ], "Sales Type", required=True, readonly=False, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
+                                         help="""Used to indicate the type of the sales"""),
         "tax_id": fields.many2one("account.tax", 'Tax', domain=[('type_tax_use', '=', "sale")], change_default=True),
         "xremarks": fields.text("Remarks"),
         "xsalesman": fields.char("Salesman", size=128),
