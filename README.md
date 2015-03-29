@@ -1,7 +1,8 @@
-# tesa
+# Important Note
 
-`tesa` is an Odoo (OpenERP 8) plugin which is designed as per the
-requirements of one of our clients. It is, as usual, Free and Open
-Source Software.
+This repository holds more than one Odoo addons among which only one
+is developed by me. Others are included here for deployment
+convenience and fixing some issues by modifying their code.
 
-Hope that it is of some use for everyone.
+Please refer to Odoo descriptor file of each addon for copyright and
+licensing information.
