@@ -70,7 +70,7 @@ class ProductProduct(models.Model):
         self.reservation_count = sum(reserv.product_uom_qty
                                      for reserv in reservations)
 
-    @api.multi
+    @api.one
     def action_view_reservations(self):
         assert len(self._ids) == 1, "Expected 1 ID, got %r" % self._ids
         ref = 'stock_reserve.action_stock_reservation_tree'
