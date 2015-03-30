@@ -176,7 +176,7 @@
         </field>
 
         <!-- Add additional prices -->
-        <field name="lst_price" position="before">
+        <field name="lst_price" position="after">
           <field name="minimum_cash_sales_price" />
           <field name="export_sales_price" />
           <field name="minimum_sales_price" />
