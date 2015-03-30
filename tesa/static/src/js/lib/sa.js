@@ -346,7 +346,7 @@ function createNewSalesOrder (partner, location, items) {
     var Sale = new openerp.Model("sale.order");
 
     // Create:
-    Sale.call("create", [{partner_id: partner, warehouse_id: location}], {}).then(function (orderId) {
+    Sale.call("create", [{partner_id: partner, warehouse_id: location, stype: "NA"}], {}).then(function (orderId) {
         // Check the ID:
         if (!orderId) {
             alert("Can not create. Contact administrator.");
