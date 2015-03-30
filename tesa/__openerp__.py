@@ -35,6 +35,7 @@
         "views/flowchart.xml",
         "views/search.xml",
         "views/_menu.xml",
+        "security/ir.model.access.csv",
     ],
     "qweb" : [
         "static/src/xml/base.xml",
