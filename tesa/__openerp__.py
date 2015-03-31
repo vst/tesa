@@ -21,6 +21,7 @@
         "web_export_view",
         "disable_openerp_online",
         "stock_picking_locations",
+        "sale_add_products_wizard",
     ],
     "init_xml": [
     ],
