@@ -97,6 +97,23 @@ class ProductVariantModel(osv.osv):
         ctx = dict(context or {}, create_product_product=True)
         return super(ProductVariantModel, self).create(cr, uid, vals, context=ctx)
 
+
+    def _func_search_releated_oems(self, cr, uid, obj, name, criterion, context):
+        ## Get the value, ignore field and op:
+        field, op, value = criterion[0]
+
+        ## First get items with default code:
+
+        return [
+            '|',
+            ('oem.reverse_oem_ids.default_code','ilike', value),
+            '|',
+            ('reverse_oem_ids.default_code','ilike', value),
+            '|',
+            ('oem.default_code','ilike',value),
+            ('default_code','ilike',value),
+        ]
+
     def get_related_oems(self, cr, uid, ids, field_names=None, arg=None, context=None):
         """
         Returns related OEMs for the product template:
@@ -178,6 +195,7 @@ class ProductVariantModel(osv.osv):
             result[id] = location_obj.search(cr, uid, [("usage", "=", "internal")], context=context)
         return result
 
+
     _columns = {
         ## Relations:
         "oem": fields.many2one("product.product", "OEM", select=True),
@@ -185,7 +203,7 @@ class ProductVariantModel(osv.osv):
         "subparts": fields.one2many("product.subpartline", "product_id", "Subparts"),
 
         ## Computed relational data:
-        "related_oems": fields.function(get_related_oems, type="one2many", relation="product.product", string="Related OEMs"),
+        "related_oems": fields.function(get_related_oems, type="one2many", relation="product.product", string="Related OEMs", fnct_search=_func_search_releated_oems),
         "stock_locations": fields.function(get_stock_locations, type="one2many", relation="stock.location", string="Stock by Location"),
 
         ## Computed stock data:
