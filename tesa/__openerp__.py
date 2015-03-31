@@ -19,6 +19,7 @@
         "partner_credit_limit",
         "purchase_discount",
         "web_export_view",
+        "disable_openerp_online",
     ],
     "init_xml": [
     ],
