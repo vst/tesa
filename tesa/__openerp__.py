@@ -20,6 +20,7 @@
         "purchase_discount",
         "web_export_view",
         "disable_openerp_online",
+        "stock_picking_locations",
     ],
     "init_xml": [
     ],
