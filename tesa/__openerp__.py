@@ -19,6 +19,7 @@
         "partner_credit_limit",
         "purchase_discount",
         "sale_automatic_workflow",
+        "web_export_view",
     ],
     "init_xml": [
     ],
