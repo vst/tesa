@@ -18,6 +18,25 @@
       </field>
     </record>
 
+    <!-- VIEW: PURCHASE ORDER TREE -->
+    <record id="tesa_view_purchase_order_tree" model="ir.ui.view">
+      <field name="name">purchase.order.tree.inherited</field>
+      <field name="model">purchase.order</field>
+      <field name="inherit_id" ref="purchase.purchase_order_tree"/>
+      <field name="arch" type="xml">
+        <!-- Add currency -->
+        <field name="origin" position="replace">
+          <field name="create_uid" />
+        </field>
+
+        <!-- Add currency -->
+        <field name="state" position="before">
+          <field name="currency_id" />
+          <field name="xremarks" />
+        </field>
+      </field>
+    </record>
+
     <!-- VIEW: PURCHASE ORDER LINE TREE -->
     <record id="tesa_view_purchase_order_line_tree" model="ir.ui.view">
       <field name="name">purchase.order.line.tree.inherited</field>
@@ -56,7 +75,7 @@
     </record>
 
 
-    <!-- VIEW: SALE ORDER FORM -->
+    <!-- VIEW: PURCHASE ORDER FORM -->
     <record id="view_res_purchase_line_form1" model="ir.ui.view">
       <field name="name">purchase.order.line.form.inherit</field>
       <field name="model">purchase.order</field>
@@ -66,15 +85,16 @@
       <field name="arch" type="xml">
         <data>
 
+          <!-- Add remarks -->
+          <field name="date_order" position="after">
+            <field name="xremarks" />
+          </field>
+
           <!-- Add person created -->
           <xpath expr="//tree/field[@name='price_subtotal']" position="before">
             <field name="create_uid" />
             <field name="write_uid" />
           </xpath>
-          <!-- <xpath expr="//field[@name='price_subtotal']" position="before"> -->
-          <!--   <field name="create_uid" /> -->
-          <!--   <field name="write_uid" /> -->
-          <!-- </xpath> -->
 
         </data>
       </field>

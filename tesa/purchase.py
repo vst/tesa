@@ -47,5 +47,8 @@ PurchaseOrderLineModel()
 class PurchaseOrderModel(osv.osv):
     _inherit = "purchase.order"
 
+    _columns = {
+        "xremarks": fields.char("Reference/Description", size=128),
+    }
 
 PurchaseOrderModel()
