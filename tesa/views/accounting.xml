@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
   <data>
-    <!-- VIEW: INVOICE  -->
+    <!-- VIEW: SUPPLIER INVOICE  -->
     <record id="tree_invoice_supplier" model="ir.ui.view">
       <field name="name">account_tree_invoice_supplier</field>
       <field name="model">account.invoice</field>
@@ -13,6 +13,22 @@
           <!-- Add currency -->
           <field name="reference" position="replace">
             <field name="supplier_invoice_number" />
+          </field>
+        </data>
+      </field>
+    </record>
+
+    <!-- VIEW: CUSTOMER PAYMENT  -->
+    <record id="tree_customer_payment" model="ir.ui.view">
+      <field name="name">account_tree_customer_payment</field>
+      <field name="model">account.voucher</field>
+      <field name="type">tree</field>
+      <field name="inherit_id" ref="account_voucher.view_voucher_tree"/>
+      <field name="arch" type="xml">
+        <data>
+          <!-- Add currency -->
+          <field name="reference" position="before">
+            <field name="name" />
           </field>
         </data>
       </field>
