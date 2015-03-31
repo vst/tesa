@@ -38,6 +38,7 @@
         "views/purchase.xml",
         "views/flowchart.xml",
         "views/search.xml",
+        "views/accounting.xml",
         "views/_menu.xml",
         "security/ir.model.access.csv",
     ],
