@@ -90,12 +90,11 @@
       <field name="inherit_id" ref="sale.view_quotation_tree"/>
       <field name="arch" type="xml">
         <data>
-          <!-- Add currency -->
-          <field name="amount_total" position="before">
+          <!-- Add stuff -->
+          <field name="state" position="before">
             <field name="currency_id" />
-          </field>
-          <!-- Add warehouse -->
-          <field name="state" position="after">
+            <field name="stype" />
+            <field name="client_order_ref" />
             <field name="warehouse_id" />
           </field>
         </data>
@@ -111,14 +110,12 @@
       <field name="inherit_id" ref="sale.view_order_tree"/>
       <field name="arch" type="xml">
         <data>
-          <!-- Add currency -->
-          <field name="amount_total" position="before">
+          <!-- Add stuff -->
+          <field name="state" position="before">
             <field name="currency_id" />
-          </field>
-          <!-- Add type -->
-          <field name="amount_total" position="after">
             <field name="stype" />
             <field name="client_order_ref" />
+            <field name="warehouse_id" />
           </field>
         </data>
       </field>
