@@ -74,6 +74,8 @@ class SaleOrderModel(osv.osv):
             states={'draft': [('readonly', False)], 'done': [('readonly', True)]},
             help="""Used to indicate the type of the sales"""),
         "tax_id": fields.many2one("account.tax", 'Tax', domain=[('type_tax_use', '=', "sale")], change_default=True),
+        "xchassis": fields.char("Chassis", size=128),
+        "xcontact": fields.char("Contact Number", size=128),
         "xremarks": fields.text("Remarks"),
         "xsalesman": fields.char("Salesman", size=128),
         "xdeliverydate": fields.char("Delivery Date", size=256),

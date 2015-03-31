@@ -38,8 +38,14 @@
             <field name="tax_id" />
           </field>
 
-          <!-- Add sales type -->
+          <!-- Add sales type and xontact number-->
           <field name="partner_shipping_id" position="after">
+            <field name="xcontact" />
+            <field name="xchassis" />
+          </field>
+
+          <!-- Add chassis -->
+          <field name="client_order_ref" position="after">
             <field name="stype" />
           </field>
 
@@ -112,6 +118,7 @@
           <!-- Add type -->
           <field name="amount_total" position="after">
             <field name="stype" />
+            <field name="client_order_ref" />
           </field>
         </data>
       </field>
