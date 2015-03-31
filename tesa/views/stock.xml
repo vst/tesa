@@ -1,6 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
   <data>
+    <!-- VIEW: STOCK MOVE FOR PRODUCTS -->
+    <record id="view_move_picking_tree_extended" model="ir.ui.view">
+      <field name="name">stock.move.tree.inherited</field>
+      <field name="model">stock.move</field>
+      <field name="inherit_id" ref="stock.view_move_picking_tree"/>
+      <field name="arch" type="xml">
+        <!-- Remove picking id and locatio id first -->
+        <field name="picking_id" position="replace" />
+        <field name="location_id" position="replace" />
+        <field name="create_date" position="replace" />
+        <field name="date_expected" position="replace" />
+
+        <!-- Add dates id -->
+        <field name="product_id" position="before">
+          <field name="create_date" />
+          <field name="date_expected" />
+        </field>
+
+        <!-- Add origin and picking id -->
+        <field name="product_id" position="after">
+          <field name="origin" />
+          <field name="picking_id" />
+        </field>
+
+        <!-- Add source id -->
+        <field name="location_dest_id" position="before">
+          <field name="location_id" />
+        </field>
+      </field>
+    </record>
+
     <!-- VIEW: STOCK PICKING OUT -->
     <record id="view_picking_form_tesa" model="ir.ui.view">
       <field name="name">stock.picking.form.inherit</field>

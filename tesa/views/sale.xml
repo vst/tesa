@@ -38,8 +38,14 @@
             <field name="tax_id" />
           </field>
 
-          <!-- Add sales type -->
+          <!-- Add sales type and xontact number-->
           <field name="partner_shipping_id" position="after">
+            <field name="xcontact" />
+            <field name="xchassis" />
+          </field>
+
+          <!-- Add chassis -->
+          <field name="client_order_ref" position="after">
             <field name="stype" />
           </field>
 
@@ -51,9 +57,15 @@
             <button name="browse_product_id"  icon="STOCK_FIND" type="object"/>
           </xpath>
 
-          <!-- Get rid off the discount column -->
-          <xpath expr="//tree/field[@name='discount']" position="replace" />
-          <xpath expr="//field[@name='discount']" position="replace" />
+          <!-- Get rid off the discount column and add person created -->
+          <xpath expr="//tree/field[@name='discount']" position="replace">
+            <field name="create_uid" />
+            <field name="write_uid" />
+          </xpath>
+          <xpath expr="//field[@name='discount']" position="replace">
+            <field name="create_uid" />
+            <field name="write_uid" />
+          </xpath>
 
           <!-- Add salesman, delivery date and remarks from the old system -->
           <xpath expr="/form/sheet/notebook/page[@string='Other Information']" position="after">
@@ -78,12 +90,11 @@
       <field name="inherit_id" ref="sale.view_quotation_tree"/>
       <field name="arch" type="xml">
         <data>
-          <!-- Add currency -->
-          <field name="amount_total" position="before">
+          <!-- Add stuff -->
+          <field name="state" position="before">
             <field name="currency_id" />
-          </field>
-          <!-- Add warehouse -->
-          <field name="state" position="after">
+            <field name="stype" />
+            <field name="client_order_ref" />
             <field name="warehouse_id" />
           </field>
         </data>
@@ -99,13 +110,12 @@
       <field name="inherit_id" ref="sale.view_order_tree"/>
       <field name="arch" type="xml">
         <data>
-          <!-- Add currency -->
-          <field name="amount_total" position="before">
+          <!-- Add stuff -->
+          <field name="state" position="before">
             <field name="currency_id" />
-          </field>
-          <!-- Add type -->
-          <field name="amount_total" position="after">
             <field name="stype" />
+            <field name="client_order_ref" />
+            <field name="warehouse_id" />
           </field>
         </data>
       </field>

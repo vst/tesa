@@ -1,10 +1,10 @@
 {
     "name": "tesa",
-    "version": "0.0.19",
+    "version": "0.0.20",
     "author": "Telosoft",
     "category": "Tools",
     "website": "http://www.telosoft.com",
-    "description": """Provides an ERP Implementation and Customization Addon (Version 0.0.19)""",
+    "description": """Provides an ERP Implementation and Customization Addon (Version 0.0.20)""",
     "depends": [
         "base",
         "account_accountant",
@@ -18,7 +18,11 @@
         "stock_reserve_sale",
         "partner_credit_limit",
         "purchase_discount",
-        "sale_automatic_workflow",
+        "web_export_view",
+        "disable_openerp_online",
+        "stock_picking_locations",
+        "sale_add_products_wizard",
+        "sale_order_line_view",
     ],
     "init_xml": [
     ],
@@ -34,7 +38,9 @@
         "views/purchase.xml",
         "views/flowchart.xml",
         "views/search.xml",
+        "views/accounting.xml",
         "views/_menu.xml",
+        "security/ir.model.access.csv",
     ],
     "qweb" : [
         "static/src/xml/base.xml",
