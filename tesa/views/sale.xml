@@ -51,9 +51,15 @@
             <button name="browse_product_id"  icon="STOCK_FIND" type="object"/>
           </xpath>
 
-          <!-- Get rid off the discount column -->
-          <xpath expr="//tree/field[@name='discount']" position="replace" />
-          <xpath expr="//field[@name='discount']" position="replace" />
+          <!-- Get rid off the discount column and add person created -->
+          <xpath expr="//tree/field[@name='discount']" position="replace">
+            <field name="create_uid" />
+            <field name="write_uid" />
+          </xpath>
+          <xpath expr="//field[@name='discount']" position="replace">
+            <field name="create_uid" />
+            <field name="write_uid" />
+          </xpath>
 
           <!-- Add salesman, delivery date and remarks from the old system -->
           <xpath expr="/form/sheet/notebook/page[@string='Other Information']" position="after">

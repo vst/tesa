@@ -56,6 +56,30 @@
     </record>
 
 
+    <!-- VIEW: SALE ORDER FORM -->
+    <record id="view_res_purchase_line_form1" model="ir.ui.view">
+      <field name="name">purchase.order.line.form.inherit</field>
+      <field name="model">purchase.order</field>
+      <field name="type">form</field>
+      <field name="priority" eval="8"/>
+      <field name="inherit_id" ref="purchase.purchase_order_form"/>
+      <field name="arch" type="xml">
+        <data>
+
+          <!-- Add person created -->
+          <xpath expr="//tree/field[@name='price_subtotal']" position="before">
+            <field name="create_uid" />
+            <field name="write_uid" />
+          </xpath>
+          <!-- <xpath expr="//field[@name='price_subtotal']" position="before"> -->
+          <!--   <field name="create_uid" /> -->
+          <!--   <field name="write_uid" /> -->
+          <!-- </xpath> -->
+
+        </data>
+      </field>
+    </record>
+
 
   </data>
 </openerp>
