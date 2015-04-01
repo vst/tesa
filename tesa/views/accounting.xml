@@ -168,5 +168,32 @@
       </xpath>
     </template>
 
+
+    <!-- FOR CUSTOMER RECEIPTS -->
+    <template id="report_customer_payment_document">
+      <t t-call="report.external_layout">
+        <div class="page">
+          <div class="row">
+            <h3>Title</h3>
+          </div>
+        </div>
+      </t>
+    </template>
+    <template id="report_customer_payment">
+      <t t-call="report.html_container">
+        <t t-foreach="doc_ids" t-as="doc_id">
+          <t t-raw="translate_doc(doc_id, doc_model, 'partner_id.lang', 'tesa.report_customer_payment_document')"/>
+        </t>
+      </t>
+    </template>
+
+    <report
+        id="custom_report_customer_payment"
+        model="account.voucher"
+        string="Official Receipt"
+        report_type="qweb-pdf"
+        name="tesa.report_customer_payment"
+        attachment_use="False"
+        file="tesa.report_customer_payment"/>
   </data>
 </openerp>
