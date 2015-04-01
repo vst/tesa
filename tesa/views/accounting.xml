@@ -171,14 +171,66 @@
 
     <!-- FOR CUSTOMER RECEIPTS -->
     <template id="report_customer_payment_document">
-      <t t-call="report.external_layout">
-        <div class="page">
-          <div class="row">
-            <h3>Title</h3>
+      <t t-name="tesa.report_customer_payment_document">
+        <t t-call="report.external_layout">
+          <div class="page">
+            <div class="row">
+              <div class="col-xs-6 col-xs-offset-6">
+                <h2>Official Receipt</h2>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xs-6">
+                <h3>Received with thanks from</h3>
+
+                <address t-field="o.partner_id" t-field-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;], &quot;no_marker&quot;: true}"/>
+                <span t-field="o.partner_id.vat"/>
+
+              </div>
+              <div class="col-xs-6">
+                <h3><span t-field="o.number" /></h3>
+                <table class="table table-condensed">
+                  <tbody>
+                    <tr>
+                      <th nowrap="nowrap">DATE</th>
+                      <td><span t-field="o.date"/></td>
+                    </tr>
+                    <tr>
+                      <th nowrap="nowrap">REFERENCE</th>
+                      <td><span t-field="o.reference"/></td>
+                    </tr>
+                    <tr>
+                      <th nowrap="nowrap">PAYMENT OF</th>
+                      <td><span t-field="o.name"/></td>
+                    </tr>
+                    <tr>
+                      <th nowrap="nowrap">A/C CODE</th>
+                      <td><span t-field="o.partner_id.ref"/></td>
+                    </tr>
+                    <tr>
+                      <th nowrap="nowrap">THE SUM OF</th>
+                      <td class="lead">
+                        <span t-field="o.amount" t-field-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: &quot;o.currency_id&quot;}"/>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <p><i>For and on behalf of</i></p>
+                <p class="lead">ENG SOON AUTO PTE LTD</p>
+                <p>
+                  <small>
+                    This is a Computer Generated Receipt which required no signature.
+                  </small>
+                </p>
+              </div>
+            </div>
           </div>
-        </div>
+        </t>
       </t>
     </template>
+
+    <!-- WRAPPER FOR THE PAYMENT DOCUMENT -->
     <template id="report_customer_payment">
       <t t-call="report.html_container">
         <t t-foreach="doc_ids" t-as="doc_id">
@@ -187,13 +239,14 @@
       </t>
     </template>
 
-    <report
-        id="custom_report_customer_payment"
-        model="account.voucher"
-        string="Official Receipt"
-        report_type="qweb-pdf"
-        name="tesa.report_customer_payment"
-        attachment_use="False"
-        file="tesa.report_customer_payment"/>
+    <!-- THE REPORT FOR CUSTOMER PAYMENTS -->
+    <report id="custom_report_customer_payment"
+            model="account.voucher"
+            string="Official Receipt (Only for Customer Payments)"
+            report_type="qweb-pdf"
+            name="tesa.report_customer_payment"
+            attachment_use="False"
+            file="tesa.report_customer_payment"/>
+
   </data>
 </openerp>
