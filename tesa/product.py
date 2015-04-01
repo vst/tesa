@@ -1,5 +1,6 @@
 ## Imports
 from StringIO import StringIO
+from openerp import SUPERUSER_ID
 from openerp.osv import osv, fields, expression
 from openerp.tools.translate import _
 import base64
@@ -252,6 +253,58 @@ class ProductVariantModel(osv.osv):
             'context': context,
             'nodestroy': False
         }
+
+    def name_get(self, cr, user, ids, context=None):
+        if context is None:
+            context = {}
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        if not len(ids):
+            return []
+
+        def _name_get(d):
+            code = context.get('display_default_code', True) and d.get('default_code',False) or False
+            if code:
+                name = '%s' % (code,)
+            else:
+                name = d.get('name','')
+            return (d['id'], name)
+
+        partner_id = context.get('partner_id', False)
+        if partner_id:
+            partner_ids = [partner_id, self.pool['res.partner'].browse(cr, user, partner_id, context=context).commercial_partner_id.id]
+        else:
+            partner_ids = []
+
+        # all user don't have access to seller and partner
+        # check access and use superuser
+        self.check_access_rights(cr, user, "read")
+        self.check_access_rule(cr, user, ids, "read", context=context)
+
+        result = []
+        for product in self.browse(cr, SUPERUSER_ID, ids, context=context):
+            variant = ", ".join([v.name for v in product.attribute_value_ids])
+            name = variant and "%s (%s)" % (product.name, variant) or product.name
+            sellers = []
+            if partner_ids:
+                sellers = filter(lambda x: x.name.id in partner_ids, product.seller_ids)
+            if sellers:
+                for s in sellers:
+                    seller_variant = s.product_name and "%s (%s)" % (s.product_name, variant) or False
+                    mydict = {
+                              'id': product.id,
+                              'name': seller_variant or name,
+                              'default_code': s.product_code or product.default_code,
+                              }
+                    result.append(_name_get(mydict))
+            else:
+                mydict = {
+                          'id': product.id,
+                          'name': name,
+                          'default_code': product.default_code,
+                          }
+                result.append(_name_get(mydict))
+        return result
 
 
 ProductVariantModel()
