@@ -102,17 +102,17 @@ class ProductVariantModel(osv.osv):
     def _func_search_releated_oems(self, cr, uid, obj, name, criterion, context):
         ## Get the value, ignore field and op:
         field, op, value = criterion[0]
+        value = value.strip()
 
         ## First get items with default code:
-
         return [
             '|',
-            ('oem.reverse_oem_ids.default_code','ilike', value),
+            ('oem.reverse_oem_ids.default_code','=', value),
             '|',
-            ('reverse_oem_ids.default_code','ilike', value),
+            ('reverse_oem_ids.default_code','=', value),
             '|',
-            ('oem.default_code','ilike',value),
-            ('default_code','ilike',value),
+            ('oem.default_code','=',value),
+            ('default_code','=',value),
         ]
 
     def get_related_oems(self, cr, uid, ids, field_names=None, arg=None, context=None):

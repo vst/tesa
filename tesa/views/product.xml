@@ -263,10 +263,7 @@
       <field name="model">product.product</field>
       <field name="arch" type="xml">
         <field name="name" position="after">
-          <field name="related_oems" string="OEM Group"
-                 filter_domain="[
-                                ('related_oems','ilike',self),
-                                ]" />
+          <field name="related_oems" string="OEM Group" context="{'active_test': False}" filter_domain="[('related_oems','ilike',self)]" />
         </field>
       </field>
     </record>
