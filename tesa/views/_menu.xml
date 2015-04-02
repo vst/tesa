@@ -15,7 +15,7 @@
               parent="stock.menu_stock_product"
               sequence="5" />
 
-    <menuitem id="menu_product_update_form"
+    <menuitem id="menu_supplier_update_form"
               name="Update Supplier Price"
               action="action_upload_supplier_price_list"
               parent="purchase.menu_procurement_management_product"
