@@ -327,10 +327,12 @@ class ConfigProductUpload(osv.osv_memory):
     _columns = {
         "data": fields.binary("File"),
         "createp": fields.boolean("Create if it doesn't exist"),
+        "ignorep": fields.boolean("Ignore if it doesn't exist"),
     }
 
     _defaults = {
         "createp": False,
+        "ignorep": True,
     }
 
     defaults = {
@@ -405,7 +407,7 @@ class ConfigProductUpload(osv.osv_memory):
         ## Done, return product:
         return product
 
-    def _update_product(self, data, cr, uid, context, createp=False):
+    def _update_product(self, data, cr, uid, context, createp=False, ignorep=False):
         _logger.info("Updating product %s" % (data["default_code"],))
 
         ## Get the product model:
@@ -418,24 +420,22 @@ class ConfigProductUpload(osv.osv_memory):
         if len(product) == 0:
             if createp:
                 return self._update_or_create_product(data, cr, uid, context)
-            else:
+            elif not ignorep:
                 raise osv.except_osv(_("Error!"), _("Product could not be found: %s." % (data["default_code"].strip(),)))
-
-        ## Create the product:
-        product = product_model.write(cr, uid, product, self.clean_data(data, cr, uid, context))
-
-        ## Done, return product:
-        return product
+        else:
+            ## Create the product:
+            product = product_model.write(cr, uid, product, self.clean_data(data, cr, uid, context))
 
     def upload_product(self, cr, uid, ids, context=None):
         ## Get the wizard:
-        wizard = self.read(cr, uid, ids[0], ["data", "createp"], context=context)
+        wizard = self.read(cr, uid, ids[0], ["data", "createp", "ignorep"], context=context)
 
         ## Get the data:
         data = base64.decodestring(wizard.get("data"))
 
-        ## Get flag:
+        ## Get flags:
         create_flag = wizard.get("createp")
+        ignore_flag = wizard.get("ignorep")
 
         ## Get the specs:
         specs = []
@@ -452,7 +452,7 @@ class ConfigProductUpload(osv.osv_memory):
                 raise osv.except_osv(_("Error!"), _("Required field 'default_code' cannot be found."))
 
             ## Update the product:
-            self._update_product(line, cr, uid, context, create_flag)
+            self._update_product(line, cr, uid, context, create_flag, ignore_flag)
 
         return {
             "type": "ir.actions.act_window_close",

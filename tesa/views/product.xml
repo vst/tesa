@@ -210,6 +210,7 @@
           <group>
             <field name="data" string="Browse File" />
             <field name="createp" string="Create if product doesn't exist?" />
+            <field name="ignorep" string="Ignore if product doesn't exist?" />
           </group>
           <group>
             <button icon="gtk-cancel" special="cancel" string="Cancel"/>
