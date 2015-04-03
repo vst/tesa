@@ -257,7 +257,7 @@
                 </div>
               </div>
 
-              <a href="/web?#id={{id}}&amp;view_type=form&amp;model=product.product&amp;action=135" target="_blank">Go to Product</a>
+              <a href="javascript:openerp.tesa.goToProduct({{id}});">Go to Product</a>
 
             </div>
           </div>
