@@ -13,7 +13,7 @@ class sale_order(models.Model):
 
     @api.one
     def check_limit(self):
-
+        ## Check the type of the order
         if self.order_policy == 'prepaid' or self.stype == "cash":
             return True
 
