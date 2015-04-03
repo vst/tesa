@@ -155,7 +155,7 @@
              <p> <small>
                 <strong>Note:</strong> Please add bank commission to
                 all foreign cheques. All cheque payments should be
-                crossed and made payable to ENG SOON AUTO PTE LTD at
+                crossed and made payable to <span class="text-uppercase"><span t-field="o.company_id.name"/></span> at
                 the below address. An official acknowledgement signed
                 by an Authorised Officer will be issued. Goods sold
                 are not returnable unless otherwise arranged. Overdue
@@ -217,7 +217,7 @@
                 </table>
 
                 <p><i>For and on behalf of</i></p>
-                <p class="lead">ENG SOON AUTO PTE LTD</p>
+                <p class="lead text-uppercase"><span t-field="o.company_id.name" /></p>
                 <p>
                   <small>
                     This is a Computer Generated Receipt which required no signature.
