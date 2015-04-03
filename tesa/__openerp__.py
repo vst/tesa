@@ -36,7 +36,6 @@
         "views/stock.xml",
         "views/sale.xml",
         "views/purchase.xml",
-        "views/flowchart.xml",
         "views/search.xml",
         "views/accounting.xml",
         "views/_menu.xml",
@@ -44,7 +43,6 @@
     ],
     "qweb" : [
         "static/src/xml/base.xml",
-        "static/src/xml/flowchart.xml",
         "static/src/xml/search.xml",
     ],
     "installable": True,
