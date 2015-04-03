@@ -66,6 +66,7 @@ class ExtendedStockMove(osv.osv):
         return result
 
     _columns = {
+        "xpackage": fields.char("Pack", size=64),
         "related_sales_info": fields.function(get_related_sales_info, type="text", string="Related Sales Order Line"),
     }
 
