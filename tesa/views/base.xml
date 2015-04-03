@@ -269,5 +269,14 @@
       </xpath>
     </template>
 
+
+    <!-- FOR PLAIN EXTERNAL LAYOUT -->
+    <template id="plain_external_layout">
+      <t t-name="plain_external_layout">
+        <t t-raw="0"/>
+      </t>
+    </template>
+
+
   </data>
 </openerp>
