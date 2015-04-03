@@ -27,7 +27,43 @@
 
         <!-- Add source id -->
         <field name="location_dest_id" position="before">
+          <field name="xpackage" string="Pack" />
           <field name="location_id" />
+        </field>
+      </field>
+    </record>
+
+    <!-- VIEW: STOCK MOVE TREE -->
+    <record id="view_move_tree_extended" model="ir.ui.view">
+      <field name="name">stock.move.tree.inherited</field>
+      <field name="model">stock.move</field>
+      <field name="inherit_id" ref="stock.view_move_tree"/>
+      <field name="arch" type="xml">
+
+        <field name="product_id" position="replace" />
+        <field name="product_uom_qty" position="replace" />
+        <field name="product_uom" position="replace" />
+
+        <field name="name" position="before">
+          <field name="product_id" />
+        </field>
+
+        <field name="name" position="after">
+          <field name="product_uom_qty" on_change="onchange_quantity(product_id, product_uom_qty, product_uom, product_uos)"/>
+          <field name="product_uom" string="Unit of Measure" groups="product.group_uom"/>
+          <field name="xpackage" string="Pack" />
+        </field>
+      </field>
+    </record>
+
+    <!-- VIEW: STOCK MOVE FORM -->
+    <record id="view_move_form_extended" model="ir.ui.view">
+      <field name="name">stock.move.form.inherited</field>
+      <field name="model">stock.move</field>
+      <field name="inherit_id" ref="stock.view_move_form"/>
+      <field name="arch" type="xml">
+        <field name="name" position="after">
+          <field name="xpackage" string="Pack" />
         </field>
       </field>
     </record>
@@ -38,6 +74,27 @@
       <field name="model">stock.picking</field>
       <field name="inherit_id" ref="stock.view_picking_form"/>
       <field name="arch" type="xml">
+
+        <!-- <field name="move_lines" editable="top" context="{'address_in_id': partner_id, 'form_view_ref':'stock.view_move_picking_form', 'tree_view_ref':'stock.view_move_picking_tree', 'default_picking_type_id': picking_type_id,'default_picking_id': active_id}"/> -->
+        <field name="move_lines" position="replace">
+          <field name="move_lines" widget="one2many_list" context="{'address_in_id': partner_id, 'default_picking_type_id': picking_type_id, 'default_picking_id': active_id}">
+            <tree editable='bottom'>
+              <field name="product_id"/>
+              <field name="name"/>
+              <field name="product_uom_qty"/>
+              <field name="product_uom"/>
+              <field name="xpackage" readonly="0"/>
+              <field name="date"/>
+              <field name="date_expected"/>
+              <field name="weight"/>
+              <field name="location_id"/>
+              <field name="location_dest_id"/>
+              <field name="string_availability_info"/>
+              <field name="state"/>
+            </tree>
+          </field>
+        </field>
+
         <!-- Add sizing -->
         <field name="date_done" position="after">
           <field name="sizing" />
@@ -53,6 +110,7 @@
             <th><strong>Product</strong></th>
             <th><strong>Brand</strong></th>
             <th class="text-right"><strong>Quantity</strong></th>
+            <th><strong>UOM</strong></th>
             <t t-if="o.picking_type_id.code != 'incoming'"><th><strong>Source</strong></th></t>
             <th><strong>Barcode</strong></th>
             <t t-if="o.picking_type_id.code == 'incoming'"><th>Related</th></t>
@@ -65,7 +123,8 @@
           <tr t-foreach="o.move_lines" t-as="move">
             <td><span t-field="move.product_id"/></td>
             <td><span t-field="move.product_id.brand"/></td>
-            <td class="text-right"><span t-field="move.product_uom_qty"/> <span t-field="move.product_uom" groups="product.group_uom"/></td>
+            <td class="text-right"><span t-field="move.product_uom_qty"/></td>
+            <td><span t-field="move.product_uom" groups="product.group_uom"/></td>
             <t t-if="o.picking_type_id.code != 'incoming'"><td><span t-field="move.location_id"/></td></t>
             <td>
               <span t-if="move.product_id and move.product_id.ean13">
@@ -123,6 +182,79 @@
         </tbody>
       </xpath>
     </template>
+
+    <!-- FOR STOCK PICKING -->
+    <template id="report_stock_picking_document">
+      <t t-name="tesa.report_stock_picking_document">
+        <t t-call="tesa.plain_external_layout">
+          <div class="page">
+            <div class="row">
+              <div class="col-xs-12">
+                <table class="table table-condensed table-bordered">
+                  <thead>
+                    <tr>
+                      <th><strong>Product</strong></th>
+                      <th><strong>Brand</strong></th>
+                      <th class="text-right"><strong>Quantity</strong></th>
+                      <th><strong>UOM</strong></th>
+                      <t t-if="o.picking_type_id.code != 'incoming'"><th><strong>Source</strong></th></t>
+                      <th><strong>Barcode</strong></th>
+                      <t t-if="o.picking_type_id.code == 'incoming'"><th>Related</th></t>
+                      <t t-if="o.picking_type_id.code != 'outgoing'"><th><strong>Destination</strong></th></t>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr t-foreach="o.move_lines" t-as="move">
+                      <td><span t-field="move.product_id"/></td>
+                      <td><span t-field="move.product_id.brand"/></td>
+                      <td class="text-right"><span t-field="move.product_uom_qty"/></td>
+                      <td><span t-field="move.product_uom" groups="product.group_uom"/></td>
+                      <t t-if="o.picking_type_id.code != 'incoming'"><td><span t-field="move.location_id"/></td></t>
+                      <td>
+                        <span t-if="move.product_id and move.product_id.ean13">
+                          <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('EAN13', move.product_id.ean13, 600, 100)" style="width:300px;height:50px"/>
+                        </span>
+                      </td>
+                      <t t-if="o.picking_type_id.code == 'incoming'"><td><span t-field="move.related_sales_info"/></td></t>
+                      <t t-if="o.picking_type_id.code != 'outgoing'"><td><span t-field="move.location_dest_id"/></td></t>
+                    </tr>
+                  </tbody>
+                </table>
+
+              </div>
+            </div>
+          </div>
+        </t>
+      </t>
+    </template>
+
+    <!-- WRAPPER FOR THE STOCK PICKING DOCUMENT -->
+    <template id="report_stock_picking">
+      <t t-call="report.html_container">
+        <t t-foreach="doc_ids" t-as="doc_id">
+          <t t-raw="translate_doc(doc_id, doc_model, 'partner_id.lang', 'tesa.report_stock_picking_document')"/>
+        </t>
+      </t>
+    </template>
+
+    <!-- THE REPORT FOR STOCK PICKING (PDF) -->
+    <report id="custom_report_stock_picking"
+            model="stock.picking"
+            string="Print Picking (Plain/PDF)"
+            report_type="qweb-pdf"
+            name="tesa.report_stock_picking"
+            attachment_use="False"
+            file="tesa.report_stock_picking"/>
+
+    <!-- THE REPORT FOR STOCK PICKING (HTML) -->
+    <report id="custom_report_stock_picking_html"
+            model="stock.picking"
+            string="Print Picking (Plain/HTML)"
+            report_type="qweb-html"
+            name="tesa.report_stock_picking"
+            attachment_use="False"
+            file="tesa.report_stock_picking"/>
+
 
   </data>
 </openerp>

@@ -24,10 +24,6 @@
     <!-- MENU ITEMS: SEARCH -->
     <menuitem action="search" id="menu_client_search"/>
 
-    <!-- MENU ITEMS: FLOWCHART -->
-    <menuitem action="flowchart" id="menu_client_flowchart"/>
-
-
     <!-- BEGIN MENUITEMS: PRODUCT/PRODUCT VARIANTS -->
     <menuitem id="base.menu_product" name="Products" parent="base.menu_base_partner" /> <!-- Sale/Product Variants .. Sale/Products -->
     <menuitem id="product.menu_products" name="Products List" parent="base.menu_product" /> <!-- Rename Sale/Product Variants .. Sale/Products List -->

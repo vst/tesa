@@ -5,3 +5,7 @@
 td.announcement_bar {
     display: none;
 }
+
+.modal-lg {
+    width: 90%;
+}

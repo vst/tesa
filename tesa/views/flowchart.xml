@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<openerp>
-  <data>
-    <record model="ir.actions.client" id="flowchart">
-      <field name="name">Flowchart</field>
-      <field name="tag">flowchart.action</field>
-    </record>
-  </data>
-</openerp>

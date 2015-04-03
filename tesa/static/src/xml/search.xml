@@ -76,7 +76,7 @@
         <tr class="tesaSAProductSearchResultRow-{{id}}">
           <td style="text-align:right;" nowrap="nowrap">{{add1 @index}} <a href="javascript:tesaSADisplayOEMS({{id}})"><i class="glyphicon glyphicon-chevron-right"></i></a></td>
           <td>{{default_code}}</td>
-          <td><a href="/web?#id={{id}}&amp;view_type=form&amp;model=product.product&amp;action=135" target="_blank">{{name}}</a></td>
+          <td><a href="javascript:openerp.tesa.goToProduct({{id}});">{{name}}</a></td>
           <td>{{lookup brand 1}}</td>
           <td style="text-align:right;">{{formatCurrency lst_price}}</td>
           <td style="text-align:right;">{{formatCurrency minimum_cash_sales_price}}</td>
@@ -101,7 +101,7 @@
       <tr class="tesaSAOEMProductSearchResultRow-{{id}} bg-warning product-oem-for-{{../id}}" style="border-right:2px solid black;border-left:2px solid black;{{#if @last}}border-bottom:2px solid black;{{/if}}">
         <td style="text-align:right;" nowrap="nowrap"><i class="glyphicon glyphicon-list"></i></td>
         <td>{{default_code}}</td>
-        <td><a href="/web?#id={{id}}&amp;view_type=form&amp;model=product.product&amp;action=135" target="_blank">{{name}}</a></td>
+        <td><a href="javascript:openerp.tesa.goToProduct({{id}});">{{name}}</a></td>
         <td>{{lookup brand 1}}</td>
         <td style="text-align:right;">{{formatCurrency lst_price}}</td>
         <td style="text-align:right;">{{formatCurrency minimum_cash_sales_price}}</td>
