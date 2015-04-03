@@ -86,7 +86,6 @@
               <field name="xpackage" readonly="0"/>
               <field name="date"/>
               <field name="date_expected"/>
-              <field name="weight"/>
               <field name="location_id"/>
               <field name="location_dest_id"/>
               <field name="string_availability_info"/>
