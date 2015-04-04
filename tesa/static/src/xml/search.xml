@@ -45,7 +45,6 @@
                   <th style="text-align:right;">CSH</th>
                   <th style="text-align:right;">EXP</th>
                   <th style="text-align:right;">MIN</th>
-                  <th style="text-align:right;">SNP</th>
                   <th style="text-align:right;">HND</th>
                   <th style="text-align:right;">INC</th>
                   <th style="text-align:right;">OUT</th>
@@ -82,7 +81,6 @@
           <td style="text-align:right;">{{formatCurrency minimum_cash_sales_price}}</td>
           <td style="text-align:right;">{{formatCurrency export_sales_price}}</td>
           <td style="text-align:right;">{{formatCurrency minimum_sales_price}}</td>
-          <td style="text-align:right;">{{formatCurrency special_sales_price}}</td>
           <td style="text-align:right;" class="{{# if qty_available }}bg-success{{else}}bg-danger{{/if}}">{{qty_available}}</td>
           <td style="text-align:right;">{{incoming_qty}}</td>
           <td style="text-align:right;">{{outgoing_qty}}</td>
@@ -107,7 +105,6 @@
         <td style="text-align:right;">{{formatCurrency minimum_cash_sales_price}}</td>
         <td style="text-align:right;">{{formatCurrency export_sales_price}}</td>
         <td style="text-align:right;">{{formatCurrency minimum_sales_price}}</td>
-        <td style="text-align:right;">{{formatCurrency special_sales_price}}</td>
         <td style="text-align:right;" class="{{# if qty_available }}bg-success{{else}}bg-danger{{/if}}">{{qty_available}}</td>
         <td style="text-align:right;">{{incoming_qty}}</td>
           <td style="text-align:right;">{{outgoing_qty}}</td>
@@ -123,7 +120,7 @@
     <script id="tesaSAOEMProductSearchResultEmptyRowTemplate" type="text/x-handlebars-template">
       <tr class="bg-danger product-oem-for-{{id}}" style="border-right:2px solid black;border-left:2px solid black;border-bottom:2px solid black;">
         <td style="text-align:right;" nowrap="nowrap"><i class="glyphicon glyphicon-exclamation-sign"></i></td>
-        <td colspan="16">No OEM.</td>
+        <td colspan="15">No OEM.</td>
       </tr>
     </script>
 
