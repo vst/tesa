@@ -170,36 +170,6 @@
                     <td>Minimum Sales</td>
                     <td style="text-align:right;"><a href="javascript:actionSACopyPrice({{minimum_sales_price}});">{{formatCurrency minimum_sales_price}}</a></td>
                   </tr>
-                  <tr>
-                    <td>Special Sales</td>
-                    <td style="text-align:right;"><a href="javascript:actionSACopyPrice({{special_sales_price}});">{{formatCurrency special_sales_price}}</a></td>
-                  </tr>
-                </table>
-              </div>
-
-              <div class="panel panel-default">
-                <div class="panel-heading">Pricing (Purchasing)</div>
-                <table class="table">
-                  <tr>
-                    <td>Manual Price</td>
-                    <td style="text-align:right;"><a href="javascript:actionSACopyPrice({{manual_cost_price}});">{{formatCurrency manual_cost_price}}</a></td>
-                  </tr>
-                  <tr>
-                    <td>Cost Price</td>
-                    <td style="text-align:right;"><a href="javascript:actionSACopyPrice({{standard_price}});">{{formatCurrency standard_price}}</a></td>
-                  </tr>
-                  <tr>
-                    <td>ETK Cost Price</td>
-                    <td style="text-align:right;"><a href="javascript:actionSACopyPrice({{etk_cost_price}});">{{formatCurrency etk_cost_price}}</a></td>
-                  </tr>
-                  <tr>
-                    <td>Prev. Local Deal</td>
-                    <td style="text-align:right;"><a href="javascript:actionSACopyPrice({{previous_local_deal_cost_price}});">{{formatCurrency previous_local_deal_cost_price}}</a></td>
-                  </tr>
-                  <tr>
-                    <td>Curr. Local Deal</td>
-                    <td style="text-align:right;"><a href="javascript:actionSACopyPrice({{current_local_deal_cost_price}});">{{formatCurrency current_local_deal_cost_price}}</a></td>
-                  </tr>
                 </table>
               </div>
             </div>

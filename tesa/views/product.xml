@@ -58,7 +58,7 @@
             <field name="minimum_cash_sales_price" string="Cash Sales Price" />
             <field name="export_sales_price" />
             <field name="minimum_sales_price" />
-            <field name="special_sales_price" string="SNP" />
+            <field name="special_sales_price" string="SNP" groups="purchase.group_purchase_manager" />
           </field>
 
           <!-- Add additional information right after EAN13 Barcode on the home tab: -->
@@ -91,20 +91,25 @@
             <field name="subparts" />
           </field>
 
+          <!-- PERMISSION -->
+          <field name="standard_price" position="replace">
+            <field name="standard_price" groups="purchase.group_purchase_manager" />
+          </field>
+
           <!-- Add cost related stuff: -->
           <label for="standard_price" position="before">
-            <field name="manual_cost_price" />
-            <field name="previous_local_deal_cost_price" />
-            <field name="current_local_deal_cost_price" />
-            <field name="etk_cost_price" />
-            <field name="local_deal_discount_rate" />
-            <field name="etk_discount_rate" />
-            <field name="core_charges" />
+            <field name="manual_cost_price" groups="purchase.group_purchase_manager" />
+            <field name="previous_local_deal_cost_price" groups="purchase.group_purchase_manager" />
+            <field name="current_local_deal_cost_price" groups="purchase.group_purchase_manager" />
+            <field name="etk_cost_price" groups="purchase.group_purchase_manager" />
+            <field name="local_deal_discount_rate" groups="purchase.group_purchase_manager" />
+            <field name="etk_discount_rate" groups="purchase.group_purchase_manager" />
+            <field name="core_charges" groups="purchase.group_purchase_manager" />
           </label>
 
           <!-- Add Old System Data: -->
           <page string="Accounting" position="after">
-            <page string="Old System Data">
+            <page string="Old System Data" groups="purchase.group_purchase_manager">
               <field name="old_system_data" />
             </page>
           </page>
@@ -125,7 +130,7 @@
       <field name="arch" type="xml">
         <tree string="Supplier Information">
           <!-- Add Rep Price -->
-          <field name="rep_price" />
+          <field name="rep_price"  groups="purchase.group_purchase_manager"/>
         </tree>
       </field>
     </record>
@@ -138,7 +143,7 @@
       <field name="arch" type="xml">
         <field name="product_uom" position="after">
           <!-- Add Rep Price -->
-          <field name="rep_price" />
+          <field name="rep_price"  groups="purchase.group_purchase_manager" />
         </field>
       </field>
     </record>
