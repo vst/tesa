@@ -41,6 +41,24 @@ class PurchaseOrderLineModel(osv.osv):
         "currency_id": fields.function(get_currency, type="many2one", relation="res.currency", string="Currency"),
     }
 
+    def onchange_product_id(self, cr, uid, ids, pricelist_id, product_id, qty, uom_id,
+                            partner_id, date_order=False, fiscal_position_id=False, date_planned=False,
+                            name=False, price_unit=False, state='draft', context=None):
+        res = super(PurchaseOrderLineModel, self).onchange_product_id(
+            cr, uid, ids, pricelist_id, product_id, qty, uom_id,
+            partner_id, date_order, fiscal_position_id, date_planned,
+            name, price_unit, state, context)
+
+        product_obj = self.pool.get('product.product')
+        partner_obj = self.pool.get('res.partner')
+        partner = partner_obj.browse(cr, uid, partner_id)
+        context_partner = {'lang': partner.lang, 'partner_id': partner_id}
+        product_obj = product_obj.browse(cr, uid, product_id, context=context_partner)
+
+        res['value']['name'] = product_obj.name
+        return res
+
+
 PurchaseOrderLineModel()
 
 
