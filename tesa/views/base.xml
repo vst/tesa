@@ -194,27 +194,37 @@
               <input type="hidden" id="tesaSAProductCartCode" value="{{default_code}}" />
               <input type="hidden" id="tesaSAProductCartName" value="{{name}}" />
               <div class="well">
-                <label for="tesaSAProductCartPrice" style="width:65px;">Price</label>
-                <input id="tesaSAProductCartPrice"  style="width:160px;" />
-                <label for="tesaSAProductCartQuantity" style="width:65px;">Quantity</label>
-                <input id="tesaSAProductCartQuantity"  style="width:160px;" value="1" />
+                <div>
+                  <label for="tesaSAProductCartPrice" style="width:65px;">Price</label>
+                  <input id="tesaSAProductCartPrice"  style="width:160px;" />
+                </div>
+                <div>
+                  <label for="tesaSAProductCartQuantity" style="width:65px;">Quantity</label>
+                  <input id="tesaSAProductCartQuantity"  style="width:160px;" value="1" />
+                </div>
               </div>
 
               <div class="well">
-                <label for="tesaSAProductCartTag" style="width:65px;">Tag</label>
-                <input id="tesaSAProductCartTag"  style="width:160px;" />
-                <label for="tesaSAProductCartLocationA" style="width:65px;">Location</label>
-                <label for="tesaSAProductCartLocationA">A</label>
-                <input type="radio" name="tesaSAProductCartLocation" id="tesaSAProductCartLocationA" value="A" checked="checked" />
-                <label for="tesaSAProductCartLocationB">B</label>
-                <input type="radio" name="tesaSAProductCartLocation" id="tesaSAProductCartLocationB" value="B" />
-                <label for="tesaSAProductCartLocationC">C</label>
-                <input type="radio" name="tesaSAProductCartLocation" id="tesaSAProductCartLocationC" value="C" />
-                <label for="tesaSAProductCartForSales" style="width:65px;">For</label>
-                <label for="tesaSAProductCartForSales">Sales</label>
-                <input type="radio" name="tesaSAProductCartFor" id="tesaSAProductCartForSales" value="Sales" checked="checked" />
-                <label for="tesaSAProductCartForPurchases">Purchases</label>
-                <input type="radio" name="tesaSAProductCartFor" id="tesaSAProductCartForPurchases" value="Purchases" />
+                <div>
+                  <label for="tesaSAProductCartTag" style="width:65px;">Tag</label>
+                  <input id="tesaSAProductCartTag"  style="width:160px;" />
+                </div>
+                <div>
+                  <label for="tesaSAProductCartLocationA" style="width:65px;">Location</label>
+                  <label for="tesaSAProductCartLocationA">A</label>
+                  <input type="radio" name="tesaSAProductCartLocation" id="tesaSAProductCartLocationA" value="A" checked="checked" />
+                  <label for="tesaSAProductCartLocationB">B</label>
+                  <input type="radio" name="tesaSAProductCartLocation" id="tesaSAProductCartLocationB" value="B" />
+                  <label for="tesaSAProductCartLocationC">C</label>
+                  <input type="radio" name="tesaSAProductCartLocation" id="tesaSAProductCartLocationC" value="C" />
+                </div>
+                <div>
+                  <label for="tesaSAProductCartForSales" style="width:65px;">For</label>
+                  <label for="tesaSAProductCartForSales">Sales</label>
+                  <input type="radio" name="tesaSAProductCartFor" id="tesaSAProductCartForSales" value="Sales" checked="checked" />
+                  <label for="tesaSAProductCartForPurchases">Purchases</label>
+                  <input type="radio" name="tesaSAProductCartFor" id="tesaSAProductCartForPurchases" value="Purchases" />
+                </div>
                 <a href="javascript:actionSACartIt()" class="btn btn-default btn-block" style="margin-top:10px;">Add to Cart</a>
               </div>
 
@@ -228,14 +238,9 @@
               </div>
 
               <a href="javascript:openerp.tesa.goToProduct({{id}});">Go to Product</a>
-
             </div>
           </div>
         </script>
-
-
-
-
       </xpath>
     </template>
 
