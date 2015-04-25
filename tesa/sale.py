@@ -71,7 +71,7 @@ class SaleOrderLineModel(osv.osv):
         product_obj = product_obj.browse(cr, uid, product, context=context_partner)
 
         if not flag:
-            res['value']['name'] = product_obj.name
+            res['value']['name'] = "[%s] %s" % (product_obj.default_code, product_obj.name)
         return res
 
 
