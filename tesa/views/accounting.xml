@@ -133,6 +133,9 @@
                     <span t-field="o.amount_total" t-field-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: &quot;o.currency_id&quot;}"/>
                   </td>
                 </tr>
+                <tr>
+                  <td colspan="2" class="text-right"><div t-if="o.order"><span t-field="o.order.stype"/></div></td>
+                </tr>
               </table>
             </div>
           </div>

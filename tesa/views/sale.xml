@@ -275,7 +275,6 @@
           <table class="table table-condensed">
             <thead>
               <tr>
-                <th>Code</th>
                 <th>Description</th>
                 <th class="text-right">Quantity</th>
                 <th class="text-right">Unit Price</th>
@@ -284,9 +283,6 @@
             </thead>
             <tbody class="sale_tbody">
               <tr t-foreach="o.order_line" t-as="l">
-                <td>
-                  <span t-field="l.product_id.default_code"/>
-                </td>
                 <td>
                   <span t-field="l.name"/>
                 </td>
@@ -328,6 +324,9 @@
                     <span t-field="o.amount_total"
                           t-field-options='{"widget": "monetary", "display_currency": "o.pricelist_id.currency_id"}'/>
                   </td>
+                </tr>
+                <tr>
+                  <td colspan="2" class="text-right"><span t-field="o.stype"/></td>
                 </tr>
               </table>
             </div>
