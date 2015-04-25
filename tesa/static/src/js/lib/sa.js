@@ -6,6 +6,7 @@ var SAProductSearchFields = [
     "default_code",
     "name",
     "brand",
+    "uom_id",
     "lst_price",
     "minimum_cash_sales_price",
     "export_sales_price",

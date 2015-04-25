@@ -41,6 +41,7 @@
                   <th>ID</th>
                   <th>Name</th>
                   <th>Brand</th>
+                  <th>Unit</th>
                   <th style="text-align:right;">Price</th>
                   <th style="text-align:right;">CSH</th>
                   <th style="text-align:right;">EXP</th>
@@ -77,6 +78,7 @@
           <td>{{default_code}}</td>
           <td><a href="javascript:openerp.tesa.goToProduct({{id}});">{{name}}</a></td>
           <td>{{lookup brand 1}}</td>
+          <td>{{lookup uom_id 1}}</td>
           <td style="text-align:right;">{{formatCurrency lst_price}}</td>
           <td style="text-align:right;">{{formatCurrency minimum_cash_sales_price}}</td>
           <td style="text-align:right;">{{formatCurrency export_sales_price}}</td>
@@ -101,6 +103,7 @@
         <td>{{default_code}}</td>
         <td><a href="javascript:openerp.tesa.goToProduct({{id}});">{{name}}</a></td>
         <td>{{lookup brand 1}}</td>
+        <td>{{lookup uom_id 1}}</td>
         <td style="text-align:right;">{{formatCurrency lst_price}}</td>
         <td style="text-align:right;">{{formatCurrency minimum_cash_sales_price}}</td>
         <td style="text-align:right;">{{formatCurrency export_sales_price}}</td>
