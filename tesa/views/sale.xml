@@ -302,24 +302,66 @@
           </table>
 
           <div class="row">
-            <div class="col-xs-4 pull-right">
+            <div class="col-xs-8">
+
+              <div class="row">
+
+                <div class="col-xs-6">
+                  <table class="table table-condensed">
+                    <tr>
+                      <td class="invisible">empty</td>
+                    </tr>
+                    <tr>
+                      <td class="invisible">empty</td>
+                    </tr>
+                    <tr>
+                      <td class="invisible">empty</td>
+                    </tr>
+                    <tr>
+                      <td>Delivery Picked</td>
+                    </tr>
+                  </table>
+                </div>
+
+                <div class="col-xs-6">
+                  <table class="table table-condensed">
+                    <tr>
+                      <td class="invisible">empty</td>
+                    </tr>
+                    <tr>
+                      <td class="invisible">empty</td>
+                    </tr>
+                    <tr>
+                      <td class="invisible">empty</td>
+                    </tr>
+                    <tr>
+                      <td>Delivery Received</td>
+                    </tr>
+                  </table>
+                </div>
+
+              </div>
+
+            </div>
+
+            <div class="col-xs-4">
               <table class="table table-condensed">
                 <tr class="border-black">
-                  <td><strong>Total Without Taxes</strong></td>
+                  <td><strong>SUBTOTAL</strong></td>
                   <td class="text-right">
                     <span t-field="o.amount_untaxed"
                           t-field-options='{"widget": "monetary", "display_currency": "o.pricelist_id.currency_id"}'/>
                   </td>
                 </tr>
                 <tr>
-                  <td>Taxes</td>
+                  <td>ADD. GST 7%</td>
                   <td class="text-right">
                     <span t-field="o.amount_tax"
                           t-field-options='{"widget": "monetary", "display_currency": "o.pricelist_id.currency_id"}'/>
                   </td>
                 </tr>
                 <tr class="border-black">
-                  <td><strong>Total</strong></td>
+                  <td><strong>TOTAL</strong></td>
                   <td class="text-right">
                     <span t-field="o.amount_total"
                           t-field-options='{"widget": "monetary", "display_currency": "o.pricelist_id.currency_id"}'/>

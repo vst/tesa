@@ -153,6 +153,7 @@
             <span t-field="o.fiscal_position"/>
           </p>
 
+
           <div class="row">
             <div class="col-xs-5">
              <p> <small>
@@ -166,7 +167,24 @@
                 rate.
               </small></p>
             </div>
+            <div class="col-xs-7">
+              <div class="row">
+                <div class="col-xs-6">
+                  <div style="border-bottom:1px solid black;margin-bottom:10px;">
+                    <br/><br/><br/><br/><br/><br/>
+                    Delivery Picked
+                  </div>
+                </div>
+                <div class="col-xs-6">
+                  <div style="border-bottom:1px solid black;margin-bottom:10px;">
+                    <br/><br/><br/><br/><br/><br/>
+                    Delivery Received
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
+
         </div>
       </xpath>
     </template>
