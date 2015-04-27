@@ -23,6 +23,7 @@
         "stock_picking_locations",
         "sale_add_products_wizard",
         "sale_order_line_view",
+        "sale_fast_confirm",
     ],
     "init_xml": [
     ],
