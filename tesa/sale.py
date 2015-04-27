@@ -115,5 +115,36 @@ class SaleOrderModel(osv.osv):
         print "Saving: ", retval
         return retval
 
+    def _get_default_stype(self, cr, uid, context):
+        return context["stype"] if "stype" in context else "local"
+
+    def _get_default_tax_id(self, cr, uid, context):
+        if context.get("stype") == "export":
+            rate = 0
+        else:
+            rate = 0.07
+
+        tax = self.pool.get("account.tax").search(cr, uid, [("amount", "=", rate), ("type_tax_use", "=", "sale"), ("active", "=", True)])
+        if len(tax) > 0:
+            return tax[0]
+        return None
+
+    def _get_default_pricelist_id(self, cr, uid, context):
+        ccy = self.pool.get("res.currency").search(cr, uid, [("name", "=", "SGD")])
+        if len(ccy) > 0:
+            ccy = ccy[0]
+        else:
+            return None
+        pl = self.pool.get("product.pricelist").search(cr, uid, [("currency_id", "=", ccy), ("type", "=", "sale"), ("active", "=", True)])
+        if len(pl) > 0:
+            return pl[0]
+        return None
+
+    _defaults = {
+        "stype": _get_default_stype,
+        "tax_id": _get_default_tax_id,
+        "pricelist_id": _get_default_pricelist_id,
+    }
+
 
 SaleOrderModel()

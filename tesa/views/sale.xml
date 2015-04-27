@@ -143,7 +143,7 @@
       <field name="view_type">form</field>
       <field name="view_mode">tree,form,calendar,graph</field>
       <field name="search_view_id" ref="sale.view_sales_order_filter"/>
-      <field name="context">{}</field>
+      <field name="context">{'stype': 'local'}</field>
       <field name="help" type="html">
         <p class="oe_view_nocontent_create">
           Click to create a quotation that can be converted into a sales
@@ -162,7 +162,7 @@
       <field name="view_type">form</field>
       <field name="view_mode">tree,form,calendar,graph</field>
       <field name="search_view_id" ref="sale.view_sales_order_filter"/>
-      <field name="context">{}</field>
+      <field name="context">{'stype': 'cash'}</field>
       <field name="domain">[('stype','=','cash')]</field>
       <field name="help" type="html">
         <p class="oe_view_nocontent_create">
@@ -182,7 +182,7 @@
       <field name="view_type">form</field>
       <field name="view_mode">tree,form,calendar,graph</field>
       <field name="search_view_id" ref="sale.view_sales_order_filter"/>
-      <field name="context">{}</field>
+      <field name="context">{'stype': 'local'}</field>
       <field name="domain">[('stype','=','local')]</field>
       <field name="help" type="html">
         <p class="oe_view_nocontent_create">
@@ -202,7 +202,7 @@
       <field name="view_type">form</field>
       <field name="view_mode">tree,form,calendar,graph</field>
       <field name="search_view_id" ref="sale.view_sales_order_filter"/>
-      <field name="context">{}</field>
+      <field name="context">{'stype': 'export'}</field>
       <field name="domain">[('stype','=','export')]</field>
       <field name="help" type="html">
         <p class="oe_view_nocontent_create">
