@@ -72,7 +72,6 @@ class ProductVariantModel(osv.osv):
     def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):
         if len(name) < 3:
             return []
-        print "Deneme", name, args, operator, context
         if not args:
             args = []
 
@@ -514,7 +513,6 @@ class ConfigProductSupplierPriceUpload(osv.osv_memory):
     def update_supplierinfo(cls, cr, uid, context, model, product, supplier, price):
         ## Search for the item:
         item = model.search(cr, uid, [("product_tmpl_id", "=", product), ("name", "=", supplier)], limit=1, context=context)
-        print product, supplier, price, item
 
         ## Update if it exists:
         if len(item) > 0:

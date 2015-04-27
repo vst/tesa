@@ -44,15 +44,8 @@ class SaleOrderLineModel(osv.osv):
         "product_oem": fields.many2one("product.product", "OEM", select=True),
         "date_order": fields.related("order_id", "date_order", string="Order Date", readonly=True, type="datetime"),
         "currency_id": fields.function(get_currency, type="many2one", relation="res.currency", string="Currency"),
+        "parent_tax": fields.related("order_id", "tax_id", string="Parent Tax", readonly=True, type='many2one', relation='account.tax'),
     }
-
-
-    def write(self, cr, uid, ids, vals, context=None):
-        retval = super(SaleOrderLineModel, self).write(cr, uid, ids, vals, context=context)
-        ## Update taxes:
-        print "Abbauv: ", retval, ids, vals
-        return retval
-
 
     def product_id_change(self, cr, uid, ids, pricelist, product, qty=0,
                           uom=False, qty_uos=0, uos=False, name='', partner_id=False,
@@ -73,6 +66,19 @@ class SaleOrderLineModel(osv.osv):
         if not flag:
             res['value']['name'] = "[%s] %s" % (product_obj.default_code, product_obj.name)
         return res
+
+    def _update_taxes(self, cr, uid, line_id, context=None):
+        ## Get the tax
+        tax_id = self.browse(cr, uid, line_id, context=context).parent_tax
+        if tax_id:
+            self.pool.get("sale.order.line").write(cr, uid, [line_id], dict(tax_id=[(6, 0, [tax_id.id])]), context=context)
+        else:
+            self.pool.get("sale.order.line").write(cr, uid, [line_id], dict(tax_id=[(6, 0, [])]), context=context)
+
+    def create(self, cr, uid, vals, context=None):
+        retval = super(SaleOrderLineModel, self).create(cr, uid, vals, context)
+        self._update_taxes(cr, uid, retval, context=None)
+        return retval
 
 
 SaleOrderLineModel()
@@ -102,17 +108,21 @@ class SaleOrderModel(osv.osv):
         "xdeliverydate": fields.char("Delivery Date", size=256),
     }
 
+    def _update_taxes(self, cr, uid, line_ids, tax_ids, context=None):
+        self.pool.get("sale.order.line").write(cr, uid, line_ids, dict(tax_id=[(6, 0, tax_ids)]), context=context)
+
     def write(self, cr, uid, ids, vals, context=None):
         retval = super(SaleOrderModel, self).write(cr, uid, ids, vals, context=context)
         ## Update taxes:
         for id in ids:
+            ## Get the tax id:
             tax_id = self.search_read(cr, uid, [("id", "=", id)], fields=["tax_id"], context=context)[0]["tax_id"]
+
+            ## If we have a tax id, update all sale order lines.
             if tax_id:
-                lm = self.pool.get("sale.order.line")
-                which = lm.search(cr, uid, [("order_id", "=", id)], context=context)
-                print which
-                lm.write(cr, uid, which, dict(tax_id=[(6, 0, [tax_id[0]])]), context=context)
-        print "Saving: ", retval
+                self._update_taxes(cr, uid, self.pool.get("sale.order.line").search(cr, uid, [("order_id", "=", id)], context=context), [tax_id[0]], context)
+            else:
+                self._update_taxes(cr, uid, self.pool.get("sale.order.line").search(cr, uid, [("order_id", "=", id)], context=context), [], context)
         return retval
 
     def _get_default_stype(self, cr, uid, context):
